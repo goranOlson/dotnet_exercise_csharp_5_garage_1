@@ -17,10 +17,10 @@ namespace dotnet_exercise_csharp_5_garage_1
 
             // SeedData
             // Test-data
-            Airplane airplane = new Airplane("SN 1234", "silver", 16, 50, 4);           
+            Airplane airplane = new Airplane("SN 1234", "silver", 16, 50, 4);
             Boat boat = new Boat("Matilda", "Vit", 0, 65.5, 2);
             Bus bus = new Bus("EEE001", "Vit", 6, 9.8, 40);
-            Car car = new ("ABC123", "Röd", 4, "Gasoline", 2100);
+            Car car = new("ABC123", "Röd", 4, "Gasoline", 2100);
             Car car2 = new("ZZZ123", "Blå", 4, "Gasoline", 2100);
             Motorcycle motorcycle = new("MNO987", "Svart", 2, 2, 1300.5);
 
@@ -47,12 +47,12 @@ namespace dotnet_exercise_csharp_5_garage_1
             Console.WriteLine($"Garage count: " + garage.Count);
             Console.WriteLine();
 
-            if (!garage.ParkCar(car2))
-                Console.WriteLine("Failed parked car2");
-            Console.WriteLine($"Garage count: " + garage.Count);
-            Console.WriteLine();
+            //if (!garage.ParkCar(car2))
+            //    Console.WriteLine("Failed parked car2");
+            //Console.WriteLine($"Garage count: " + garage.Count);
+            //Console.WriteLine();
 
-            garage.PrintParkedVehicles();
+            //garage.PrintParkedVehicles();
 
             if (!garage.ParkCar(airplane))
                 Console.WriteLine("Failed parked airplane");
@@ -61,18 +61,29 @@ namespace dotnet_exercise_csharp_5_garage_1
 
             garage.PrintParkedVehicles();
 
+        //=== Search regNbr
+            Console.WriteLine("# Search regNbr 'Abc123': ");
+            var vehicle = garage.GetVehicleByRegNbr("Abc123");
+            if (vehicle != null)
+            {
+                Console.WriteLine("# Got " + vehicle.RegNbr);
+            }
+
+        //=== unpark
             //if (!garage.UnparkCar(car))
             //    Console.WriteLine("Failed to unpark parked car");
 
-            if (!garage.UnparkCar(car))
-                Console.WriteLine("Failed to unpark parked car");
+            //if (!garage.UnparkCar(car))
+            //    Console.WriteLine("Failed to unpark parked car");
 
-            //garage.PrintGarage();
+            ////garage.PrintGarage();
 
-            if (!garage.UnparkCar(car2))
-                Console.WriteLine("Failed to unpark parked car2");
+            //if (!garage.UnparkCar(car2))
+            //    Console.WriteLine("Failed to unpark parked car2");
 
             garage.PrintParkedVehicles();
+
+            garage.PrintVehiclesByType();
 
 
 

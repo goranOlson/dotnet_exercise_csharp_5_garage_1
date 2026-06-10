@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Net.WebSockets;
-using System.Runtime.CompilerServices;
-using System.Text;
-
-namespace dotnet_exercise_csharp_5_garage_1.Classes
+﻿namespace dotnet_exercise_csharp_5_garage_1.Classes
 {
     internal class Garage
     {
         private Vehicle[] _parking = new Vehicle[10];
 
         private int _capacity;  // Available parkings
-        private int _count;  // Occupied seats
+        private int _count;  // Occupied parkings
 
         public int Capacity => _capacity;
         public int Count => _count;
 
         public bool IsFull => _count >= _capacity;
+
 
         public Garage(int capacity)
         {
@@ -41,7 +35,7 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
                 }
                 else
                 {
-                    Console.WriteLine("No free space");
+                    Console.WriteLine("Garaget är fullt!");
                 }
             }
 
@@ -72,10 +66,9 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
             return success;
         }
         
-
         public void PrintParkedVehicles()
         {
-            Console.WriteLine($"{Environment.NewLine}___ Parked vehicles ___ ({Count}/{Capacity})");
+            Console.WriteLine($"{Environment.NewLine}___ Parkerade fordon ___ ({Count}/{Capacity})");
             if (_count > 0)
             {
                 for (int i = 0; i < _parking.Length; i++)
@@ -88,12 +81,50 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
             }
             else
             {
-                //Console.WriteLine($"{Environment.NewLine}Garaget är tomt!");
-                Console.WriteLine($"Garaget är tomt!");
+                Console.WriteLine("Garaget är tomt!");
             }
-            
             Console.WriteLine();
         }
+
+        public Vehicle? GetVehicleByRegNbr(string regNbr)
+        {
+            Vehicle? vehicle = null;
+
+            if (Count > 0 && regNbr != "")
+            {
+                var list = _parking.ToList();
+                foreach (var item in list)
+                {
+                    if (item != null && item.RegNbr.ToUpper() == regNbr.ToUpper())
+                    {
+                        vehicle = item;
+                    }
+                }
+            }
+
+            return vehicle;
+        }
+
+        public void PrintVehiclesByType()
+        {
+            Console.WriteLine($"{Environment.NewLine}___ Parkerade fordon utifrån typ ___ ({Count}/{Capacity})");
+
+            var types = ListVehicleTypes();
+            if (types.Count > 0)
+            {
+                foreach (var item in types)
+                {
+                    Console.WriteLine($"{item.Key}: {item.Value} st");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Garaget är tomt!");
+            }
+            Console.WriteLine();
+        }
+
+
 
         private int GetEmptyParking()
         {
@@ -111,6 +142,32 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
 
 
             return n;
+        }
+
+        private Dictionary<string, uint> ListVehicleTypes()
+        {
+            Dictionary<string, uint> types = new Dictionary<string, uint>();
+            if (Count > 0)
+            {
+                // Count unique vehicle types
+                for (int i = 0; i < _capacity; i++)
+                {
+                    if (_parking[i] != null)
+                    {
+                        string name = _parking[i].GetType().Name;
+                        if (types.ContainsKey(name))
+                        {
+                            types[name] += 1;
+                        }
+                        else
+                        {
+                            types.Add(name, 1);
+                        }
+                    }
+                }
+            }
+
+            return types;
         }
     }
 }
