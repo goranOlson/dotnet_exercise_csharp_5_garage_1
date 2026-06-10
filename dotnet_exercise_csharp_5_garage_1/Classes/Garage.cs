@@ -4,19 +4,33 @@
     {
         private Vehicle[] _parking = new Vehicle[10];
 
-        private int _capacity;  // Available parkings
-        private int _count;  // Occupied parkings
+        private uint _capacity;  // Available parkings
+        private uint _count;  // Occupied parkings
 
-        public int Capacity => _capacity;
-        public int Count => _count;
+        public uint Capacity => _capacity;
+        public uint Count => _count;
 
         public bool IsFull => _count >= _capacity;
 
 
-        public Garage(int capacity)
+        public Garage(uint capacity)
         {
             _capacity = capacity;
-            Console.WriteLine($"Garage({_capacity})");
+        }
+
+
+        public Vehicle? GetVehicleByRegNbr(string regNbr)
+        {
+            Vehicle? vehicle = null;
+
+            if (Count > 0 && !String.IsNullOrEmpty(regNbr))
+            {
+                var list = _parking.ToList();
+                var result = list.FirstOrDefault(v => v != null && v.RegNbr.ToUpper() == regNbr.ToUpper());
+                vehicle = result;
+            }
+
+            return vehicle;
         }
 
         public bool ParkCar(Vehicle vehicle)
@@ -28,7 +42,6 @@
                 int freePos = GetEmptyParking();
                 if (freePos >= 0)
                 {
-                    Console.WriteLine($"freePos: {freePos}");
                     _parking[freePos] = vehicle;
                     _count++;
                     success = true;
@@ -42,30 +55,7 @@
             return success;
         }
 
-        public bool UnparkCar(Vehicle vehicle)
-        {
-            bool success = false;
 
-            for (int i = 0; i < _parking.Length; i++)
-            {
-                if (_parking[i] != null)
-                {
-                    // Console.WriteLine($" # {i} - {_parking[i].RegNbr}");
-                    if (_parking[i].RegNbr.ToUpper() == vehicle.RegNbr.ToUpper())
-                    {
-                         Console.WriteLine("Unparking RegNbr.: " + vehicle.RegNbr);
-
-                        // ToDo - null, 
-                        _parking[i] = null;  
-                        _count--;
-                        success = true;
-                    }
-                }
-            }
-
-            return success;
-        }
-        
         public void PrintParkedVehicles()
         {
             Console.WriteLine($"{Environment.NewLine}___ Parkerade fordon ___ ({Count}/{Capacity})");
@@ -86,24 +76,6 @@
             Console.WriteLine();
         }
 
-        public Vehicle? GetVehicleByRegNbr(string regNbr)
-        {
-            Vehicle? vehicle = null;
-
-            if (Count > 0 && regNbr != "")
-            {
-                var list = _parking.ToList();
-                foreach (var item in list)
-                {
-                    if (item != null && item.RegNbr.ToUpper() == regNbr.ToUpper())
-                    {
-                        vehicle = item;
-                    }
-                }
-            }
-
-            return vehicle;
-        }
 
         public void PrintVehiclesByType()
         {
@@ -124,24 +96,33 @@
             Console.WriteLine();
         }
 
+        public bool UnparkCar(Vehicle vehicle)
+        {
+            bool success = false;
+
+            for (int i = 0; i < _parking.Length; i++)
+            {
+                if (_parking[i] != null)
+                {
+                    if (_parking[i].RegNbr.ToUpper() == vehicle.RegNbr.ToUpper())
+                    {
+                        Console.WriteLine("Unparking RegNbr.: " + vehicle.RegNbr);
+
+                        // ToDo - null, 
+                        _parking[i] = null;
+                        _count--;
+                        success = true;
+                    }
+                }
+            }
+
+            return success;
+        }
 
 
         private int GetEmptyParking()
         {
-            int n = -1;
-
-            // int numIndex = Array.IndexOf(numbers, numToRemove);
-            for (int i = 0; i < _parking.Length; i++)
-            {
-                if (_parking[i] is null)
-                {
-                    n = i;
-                    break;
-                }
-            }
-
-
-            return n;
+            return Array.FindIndex(_parking, p => p == null);
         }
 
         private Dictionary<string, uint> ListVehicleTypes()
