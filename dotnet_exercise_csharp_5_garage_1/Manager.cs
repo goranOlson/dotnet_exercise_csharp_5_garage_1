@@ -6,6 +6,7 @@ namespace dotnet_exercise_csharp_5_garage_1
     internal class Manager
     {
         private ConsoleUI _ui;  // => IUI
+        
         private Garage _garage;
 
         public ConsoleUI UI => _ui;
@@ -14,10 +15,9 @@ namespace dotnet_exercise_csharp_5_garage_1
         public Manager(string uiType)
         {
             Init(uiType);
-            Run();
         }
 
-        private void Run()
+        public void Run()
         {
             // Menu
             bool exit = false;

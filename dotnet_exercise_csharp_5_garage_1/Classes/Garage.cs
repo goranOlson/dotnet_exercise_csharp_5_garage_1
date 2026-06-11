@@ -39,7 +39,7 @@
 
             if (!IsFull)
             {
-                int freePos = GetEmptyParking();
+                int freePos = GetFirstEmptyParking();
                 if (freePos >= 0)
                 {
                     _parking[freePos] = vehicle;
@@ -108,7 +108,7 @@
                     {
                         Console.WriteLine("Unparking RegNbr.: " + vehicle.RegNbr);
 
-                        // ToDo - null, 
+                        // ToDo - Error: _parking[i] = null; 
                         _parking[i] = null;
                         _count--;
                         success = true;
@@ -119,8 +119,7 @@
             return success;
         }
 
-
-        private int GetEmptyParking()
+        private int GetFirstEmptyParking()
         {
             return Array.FindIndex(_parking, p => p == null);
         }
