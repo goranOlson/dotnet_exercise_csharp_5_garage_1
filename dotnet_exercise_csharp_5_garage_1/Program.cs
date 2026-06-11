@@ -1,4 +1,5 @@
 ﻿using dotnet_exercise_csharp_5_garage_1.Classes;
+using dotnet_exercise_csharp_5_garage_1.UI;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.Marshalling;
@@ -10,6 +11,15 @@ namespace dotnet_exercise_csharp_5_garage_1
         static void Main(string[] args)
         {
             uint garageSize = 10;
+
+            ConsoleUI ui = new ConsoleUI();
+
+            string str = ui.AskForString("Ge sträng");
+            Console.WriteLine("# str: " + str);
+
+            uint tal = ui.AskForUInt("Ge heltal");
+            Console.WriteLine("# tal: " + tal);
+
 
             Garage garage = new(garageSize);
 
