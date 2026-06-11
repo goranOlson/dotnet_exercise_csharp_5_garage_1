@@ -14,16 +14,14 @@
                 Print($"{prompt}: ");
                 answer = GetInput();
 
-                if (string.IsNullOrWhiteSpace(answer))
+                if ((string.IsNullOrWhiteSpace(answer)) || (validate != null && !validate(answer)))
                 {
-                    Print($"Felaktig inmating{Environment.NewLine}");
-                }
-                else if (validate != null && !validate(answer))
-                {
-                    Print($"You must enter a valid 2{Environment.NewLine}");
+                    Print($"Felaktig inmating!{Environment.NewLine}");
                 }
                 else
+                {
                     success = true;
+                }
 
             } while (!success);
 
@@ -48,6 +46,11 @@
             ));
         }
 
+        public void Clear()
+        {
+            Console.Clear();
+        }
+        
         public string GetInput()
         {
             return Console.ReadLine() ?? string.Empty;
@@ -56,6 +59,26 @@
         public void Print(string prompt)
         {
             Console.Write(prompt);
+        }
+
+        public void PrintLine(string prompt)
+        {
+            Console.WriteLine(prompt);
+        }
+
+        public bool ExitMessageAction(string prompt)
+        {
+            bool keyIsPressed = false;
+
+            PrintLine($"{Environment.NewLine}{prompt}");
+            ConsoleKeyInfo key = Console.ReadKey();
+
+            if (key.ToString() != "")
+            {
+                keyIsPressed = true;
+            }
+
+            return keyIsPressed;
         }
     }
 }
