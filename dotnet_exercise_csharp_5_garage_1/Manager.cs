@@ -1,5 +1,7 @@
 ﻿using dotnet_exercise_csharp_5_garage_1.Classes;
 using dotnet_exercise_csharp_5_garage_1.UI;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace dotnet_exercise_csharp_5_garage_1
 {
@@ -11,6 +13,8 @@ namespace dotnet_exercise_csharp_5_garage_1
 
         public ConsoleUI UI => _ui;
         public Garage Garage => _garage;
+
+        private Handler _handler;
         
         public Manager(string uiType)
         {
@@ -43,17 +47,85 @@ namespace dotnet_exercise_csharp_5_garage_1
                 UI.PrintLine("0 Avsluta");
                 UI.PrintLine("");
 
-                menuChoice = (int)UI.AskForUInt("Välj aktiviet (0 - 5)", 0, 0);  // Min/Max
+                menuChoice = (int)UI.AskForUInt("Välj aktiviet (0 - 5)", 0, 1);  // Min/Max
                 Console.WriteLine("menuChoice: " + menuChoice);
 
-                // if / swich
-
-                if (menuChoice == 0)
+                switch(menuChoice)
                 {
-                    exit = true;
+                    case 1:
+                        if (!_garage.IsFull)
+                        {
+                            if (CheckinVehicle())
+                            {
+                                UI.PrintLine("Fordonet är parkerat");
+
+                            }
+                            else
+                            {
+                                UI.PrintLine("Kunde tyvärr inte parkera fordonet!");
+                            }
+
+                        }
+                        else
+                        {
+                            UI.PrintLine("Garaget är tyvärr redan fullt!");
+                        }
+                        break;
+
+                    case 0:
+                        exit = true;
+                        break;
                 }
+                UI.ExitMessageAction("Tryck på valfri tangent för att forsätta!");
+
+
+                //if (menuChoice == 0)
+                //{
+                //    exit = true;
+                //}
             } while (!exit);
         }
+
+        private bool CheckinVehicle()
+        {
+            UI.PrintLine("___ Skapa car ___");
+
+
+            // Car
+            var vehicle = CreateCar();
+            vehicle.ToString();
+
+            return true;
+        }
+
+        private (string regNbr, string color, uint wheels) AskBaseVehicleData()
+        {
+            string regNbr = UI.AskForString("Registreringsnummer");
+            string color = UI.AskForString("Färg");
+            uint wheels = UI.AskForUInt("Antal hjul", 0);
+            return (regNbr, color, wheels);
+        }
+
+        private Car CreateCar()
+        {
+            // string regNbr, string color, uint wheels, string fuleType, double cylinderVolume
+            //UI.PrintLine("___ Skapa car ___");
+            //string regNbr = UI.AskForString("Registreringsnummer");
+            //string color = UI.AskForString("Färg");
+            //uint wheels = UI.AskForUInt("Antal hjul", 0);
+
+            var commonData = AskBaseVehicleData();
+
+            string fuleType = UI.AskForString("Drivmedel");
+            uint cylinderVolume = UI.AskForUInt("Cylindervolym", 0);
+
+
+
+
+            return new Car(commonData.regNbr, commonData.color, commonData.wheels, fuleType, cylinderVolume);
+        }
+
+        // AskFixedString(){}
 
         private void Init(string uiType)
         {
@@ -61,6 +133,7 @@ namespace dotnet_exercise_csharp_5_garage_1
             _ui = new ConsoleUI();
 
             _garage = new Garage(AskForGarageSize());
+            _handler = new Handler(_garage);
 
             if (AskForSeedingData() == true)
             {
