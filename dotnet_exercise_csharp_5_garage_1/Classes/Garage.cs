@@ -1,11 +1,14 @@
-﻿namespace dotnet_exercise_csharp_5_garage_1.Classes
+﻿using dotnet_exercise_csharp_5_garage_1.UI;
+
+namespace dotnet_exercise_csharp_5_garage_1.Classes
 {
-    internal class Garage
+    internal class Garage<T> where T : Vehicle
     {
         private Vehicle[] _parking = new Vehicle[10];
 
         private uint _capacity;  // Available parkings
         private uint _count;  // Occupied parkings
+        private ConsoleUI _ui;
 
         public uint Capacity => _capacity;
         public uint Count => _count;
@@ -13,8 +16,9 @@
         public bool IsFull => _count >= _capacity;
 
 
-        public Garage(uint capacity)
+        public Garage(ConsoleUI ui, uint capacity)
         {
+            _ui = ui;
             _capacity = capacity;
         }
 
@@ -45,6 +49,7 @@
                     _parking[freePos] = vehicle;
                     _count++;
                     success = true;
+                    // Console.WriteLine("Ok parkerad, pos " + freePos);
                 }
                 else
                 {
