@@ -20,8 +20,13 @@ namespace dotnet_exercise_csharp_5_garage_1
             _ui = ui;
         }
 
+        public Vehicle? GetVehicleByRegNbr(string regNbr) => _garage?.GetVehicleByRegNbr(regNbr);
+
         public bool ParkVehicle(Vehicle vehicle) => _garage.ParkCar(vehicle);
 
+        public void PrintParkedVehicles(ConsoleUI ui) => _garage.PrintParkedVehicles(ui);
 
+        public void PrintVehiclesByType(ConsoleUI ui) => _garage.PrintVehiclesByType(ui);
+        public bool UnparkVehicle(Vehicle vehicle) => _garage.UnparkVehicle(vehicle);
     }
 }

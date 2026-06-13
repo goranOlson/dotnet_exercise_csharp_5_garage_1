@@ -6,9 +6,9 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
     {
         private Vehicle[] _parking = new Vehicle[10];
 
-        private uint _capacity;  // Available parkings
+        private readonly uint _capacity;  // Available parkings
+
         private uint _count;  // Occupied parkings
-        private ConsoleUI _ui;
 
         public uint Capacity => _capacity;
         public uint Count => _count;
@@ -16,9 +16,8 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
         public bool IsFull => _count >= _capacity;
 
 
-        public Garage(ConsoleUI ui, uint capacity)
+        public Garage(uint capacity)
         {
-            _ui = ui;
             _capacity = capacity;
         }
 
@@ -61,47 +60,34 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
         }
 
 
-        public void PrintParkedVehicles()
+        public void PrintParkedVehicles(ConsoleUI ui)
         {
-            Console.WriteLine($"{Environment.NewLine}___ Parkerade fordon ___ ({Count}/{Capacity})");
             if (_count > 0)
             {
                 for (int i = 0; i < _parking.Length; i++)
                 {
                     if (_parking[i] != null)
                     {
-                        Console.WriteLine("- " + _parking[i].ToString());
+                        ui.PrintLine("- " + _parking[i].ToString());
                     }
                 }
             }
-            else
-            {
-                Console.WriteLine("Garaget är tomt!");
-            }
-            Console.WriteLine();
         }
 
 
-        public void PrintVehiclesByType()
+        public void PrintVehiclesByType(ConsoleUI ui)
         {
-            Console.WriteLine($"{Environment.NewLine}___ Parkerade fordon utifrån typ ___ ({Count}/{Capacity})");
-
             var types = ListVehicleTypes();
             if (types.Count > 0)
             {
                 foreach (var item in types)
                 {
-                    Console.WriteLine($"{item.Key}: {item.Value} st");
+                    ui.PrintLine($"{item.Key}: {item.Value} st");
                 }
             }
-            else
-            {
-                Console.WriteLine("Garaget är tomt!");
-            }
-            Console.WriteLine();
         }
 
-        public bool UnparkCar(Vehicle vehicle)
+        public bool UnparkVehicle(Vehicle vehicle)
         {
             bool success = false;
 
@@ -111,7 +97,7 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
                 {
                     if (_parking[i].RegNbr.ToUpper() == vehicle.RegNbr.ToUpper())
                     {
-                        Console.WriteLine("Unparking RegNbr.: " + vehicle.RegNbr);
+                        // Console.WriteLine("Unparking RegNbr.: " + vehicle.RegNbr);
 
                         // ToDo - Error: _parking[i] = null; 
                         _parking[i] = null;

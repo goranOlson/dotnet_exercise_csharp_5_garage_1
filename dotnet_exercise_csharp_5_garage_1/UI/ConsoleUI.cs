@@ -66,7 +66,7 @@
             Console.WriteLine(prompt);
         }
 
-        public bool ExitMessageAction(string prompt)
+        public bool ExitMessageAction(string prompt = "Tryck på valfri tangent för att forsätta!")
         {
             bool keyIsPressed = false;
 

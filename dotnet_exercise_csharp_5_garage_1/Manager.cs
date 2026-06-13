@@ -10,12 +10,13 @@ namespace dotnet_exercise_csharp_5_garage_1
         private ConsoleUI _ui;  // => IUI
         
         private Garage<Vehicle> _garage;
+        private Handler _handler;
 
         private ConsoleUI UI => _ui;
 
         private Garage<Vehicle> Garage => _garage;
 
-        private Handler _handler;
+        private Handler Handler => _handler;
         
         public Manager(string uiType)
         {
@@ -30,68 +31,153 @@ namespace dotnet_exercise_csharp_5_garage_1
 
             do
             {
-                UI.Clear();
-                // Print Header
-                UI.PrintLine($"Välkommen till Garage 1.0          {_handler.Capacity - _handler.Count} av {_handler.Capacity} platser lediga");
-                UI.PrintLine($"======================================================={Environment.NewLine}");
+                //UI.Clear();
+                //// Print Header
+                //UI.PrintLine($"Välkommen till Garage 1.0          {_handler.Capacity - _handler.Count} av {_handler.Capacity} platser lediga");
+                //UI.PrintLine($"======================================================={Environment.NewLine}");
+
+                PrintPageHeader();
+
                 // Print menu
 
-                UI.PrintLine("    Meny");
-                UI.PrintLine("--------------");
+                UI.PrintLine("    Huvudmeny");
+                UI.PrintLine("-----------------");
                 UI.PrintLine("1 Incheckning");
-                UI.PrintLine("   2 Utcheckning");
+                UI.PrintLine("2 Utcheckning");
                 UI.PrintLine("   3 Sök fordon");
                 UI.PrintLine("   4 Skapa nytt fordon");
                 UI.PrintLine("8 Lista fordon");
-                UI.PrintLine("   9 Lista fordonstyper");
+                UI.PrintLine("9 Lista fordon efter typ");
                 UI.PrintLine("0 Avsluta");
                 UI.PrintLine("");
 
-                menuChoice = (int)UI.AskForUInt("Välj aktiviet (0 - 9)", 0, 8);  // Min/Max
-                Console.WriteLine("menuChoice: " + menuChoice);
+                menuChoice = (int)UI.AskForUInt("Välj aktiviet (0 - 9)", 0, 9);  // Min/Max
+                // Console.WriteLine("menuChoice: " + menuChoice);
 
                 switch (menuChoice)
                 {
                     case 1:
                         CheckinVehicle(); 
                         break;
-                    case 8:
-                        _garage.PrintParkedVehicles();
+                    case 2:
+                        CheckOutVehicle();
                         break;
+
+                    //...
+
+                    case 8:
+                        PrintParkedVehicles();
+                        break;
+
+                    case 9:
+                        PrintVehicleByType();
+                        break;
+
                     case 0:
                         exit = true;
                         break;
                 }
-                UI.ExitMessageAction("Tryck på valfri tangent för att forsätta!");
+
+                 UI.ExitMessageAction("Tryck på valfri tangent för att forsätta!!!!!");
             } while (!exit);
         }
 
+        private void PrintPageHeader()
+        {
+            UI.Clear();
+            // Print Header
+            UI.PrintLine($"Välkommen till Garage 1.0          {_handler.Capacity - _handler.Count} av {_handler.Capacity} platser lediga");
+            UI.PrintLine($"======================================================={Environment.NewLine}");
+        }
 
+        private void PrintSubHeader(string header)
+        {
+            UI.PrintLine($"_______ {header} _______{Environment.NewLine}");
+        }
 
         private void CheckinVehicle()
         {
-            UI.PrintLine("_____ Registrera fordon _____");  // "fordon"
-            
+            string msg;
+
+            PrintPageHeader();
+            PrintSubHeader("Registrera fordon");
+
             if (!_handler.IsFull)
             {
                 // Type of vehicle?
                 var vehicle = CreateVehicle();
+                if (vehicle != null)
+                {
+                    if (_handler.ParkVehicle(vehicle!))
+                        //UI.PrintLine($"{Environment.NewLine}Fordonet är nu parkerat!");
+                        msg = $"{Environment.NewLine}Fordonet är nu parkerat!";
+                    else
+                        //UI.PrintLine("Kunde tyvärr inte parkera fordonet - okänt fel!");
+                        msg = $"{Environment.NewLine}Kunde tyvärr inte parkera fordonet - okänt fel!";
 
-                if (_handler.ParkVehicle(vehicle!))
-                    UI.PrintLine($"{Environment.NewLine}Fordonet är nu parkerat!");
-                else
-                    UI.PrintLine("Kunde tyvärr inte parkera fordonet - okänt fel!");
-
-                //string msg = _handler.newPark(vehicle) ? "Fordonet är parkerat" : "Kunde tyvärr inte parkera fordonet - okänt fel!";
-                //UI.PrintLine(msg);
+                    //string msg = _handler.newPark(vehicle) ? "Fordonet är parkerat" : "Kunde tyvärr inte parkera fordonet - okänt fel!";
+                    UI.PrintLine(msg);                
+                }
             }
             else
             {
                 UI.PrintLine("Garaget är tyvärr redan fullt!");
             }
+            UI.ExitMessageAction();
+        }
+
+        private void CheckOutVehicle()
+        {
+            Vehicle? vehicle;
+            PrintPageHeader();
+            PrintSubHeader("Checka ut fordon");
+
+            // reg.nbr
+            string regNbr = UI.AskForString("Ange reg.nummer");
+
+            // 
+            if ((vehicle = _handler.GetVehicleByRegNbr(regNbr!)) != null)
+            {
+                if (_handler.UnparkVehicle(vehicle))
+                    UI.PrintLine($"{Environment.NewLine}Fordonet är nu utcheckat!");
+                else
+                    UI.PrintLine("Fel - kunde inte checka ut fordonet!?");
+            }
+            else
+            {
+                UI.PrintLine($"{Environment.NewLine}Hittade tyvärr inget fordon med reg.nummer: " + regNbr);
+            }
+
+            UI.ExitMessageAction();
         }
 
 
+        private string CreateOccupancyText()
+        {
+            return $"{Handler.Capacity - Handler.Count} platser lediga av {Handler.Capacity}";
+        }
+
+        private void PrintParkedVehicles()
+        {
+            PrintPageHeader();
+            PrintSubHeader($"Parkerade fordon utifrån typ ({CreateOccupancyText()})");
+            if (Handler.Count > 0)
+                Handler.PrintParkedVehicles(UI);
+            else
+                UI.PrintLine("Garaget är tomt!!!");
+            // UI.ExitMessageAction();
+        }
+
+        private void PrintVehicleByType()
+        {
+            PrintPageHeader();
+            PrintSubHeader($"Parkerade fordon utifrån typ ({CreateOccupancyText()})");
+            if (Handler.Count > 0)
+                Handler.PrintVehiclesByType(UI);
+            else
+                UI.PrintLine("Garaget är tomt!!!");
+            // UI.ExitMessageAction();
+        }
 
         private (string regNbr, string color, uint wheels) AskBaseVehicleData()
         {
@@ -105,17 +191,19 @@ namespace dotnet_exercise_csharp_5_garage_1
         {
             Vehicle? vehicle = null;
 
-            UI.PrintLine("");
-            UI.PrintLine("Ange fordonstyp");
+            // UI.PrintLine("");
+            UI.PrintLine("Ange fordonstyp:");
             UI.PrintLine("");
             UI.PrintLine("1 Bil");
             UI.PrintLine("2 Buss");
             UI.PrintLine("3 Båt");
             UI.PrintLine("4 Flygplan");
             UI.PrintLine("5 Motorcykel");
+            UI.PrintLine("0 Avbryt");
 
-            uint menuChoice = UI.AskForUInt("Välj aktiviet (1 - 5)", 1, 5);  // Min/Max
-            // Console.WriteLine("menuChoice: " + menuChoice);
+            uint menuChoice = UI.AskForUInt("Välj aktiviet (0 - 5)", 0, 5);  // Min/Max
+
+            PrintPageHeader();
 
             switch (menuChoice)
             {
@@ -150,7 +238,7 @@ namespace dotnet_exercise_csharp_5_garage_1
             // TODO - if (uiType == "console")...
             _ui = new ConsoleUI();
 
-            _garage = new Garage<Vehicle>(_ui, AskForGarageSize());
+            _garage = new Garage<Vehicle>(AskForGarageSize());
             _handler = new Handler(_ui, _garage);
 
             if (AskForSeedingData() == true)
