@@ -1,8 +1,11 @@
-﻿using dotnet_exercise_csharp_5_garage_1.UI;
+﻿using dotnet_exercise_csharp_5_garage_1.Interfaces;
+using dotnet_exercise_csharp_5_garage_1.UI;
+using System.Collections;
 
 namespace dotnet_exercise_csharp_5_garage_1.Classes
 {
-    internal class Garage<T> where T : Vehicle
+    //internal class Garage: IGarage<Vehicle>
+    internal class Garage<T> : IEnumerable<T> where T : Vehicle
     {
         private Vehicle[] _parking = new Vehicle[10];
 
@@ -10,11 +13,12 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
 
         private uint _count;  // Occupied parkings
 
-        public uint Capacity => _capacity;
+        // public uint Capacity => _capacity;
         public uint Count => _count;
 
         public bool IsFull => _count >= _capacity;
 
+        public uint Capacity => _capacity;
 
         public Garage(uint capacity)
         {
@@ -42,17 +46,15 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
 
             if (!IsFull)
             {
-                int freePos = GetFirstEmptyParking();
-                if (freePos >= 0)
+                for (int i = 0; i < _parking.Length; i++)
                 {
-                    _parking[freePos] = vehicle;
-                    _count++;
-                    success = true;
-                    // Console.WriteLine("Ok parkerad, pos " + freePos);
-                }
-                else
-                {
-                    Console.WriteLine("Garaget är fullt!");
+                    if (_parking[i] == null)
+                    {
+                        _parking[i] = vehicle;
+                        _count++;
+                        success = true;
+                        break;
+                    }
                 }
             }
 
@@ -110,11 +112,6 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
             return success;
         }
 
-        private int GetFirstEmptyParking()
-        {
-            return Array.FindIndex(_parking, p => p == null);
-        }
-
         private Dictionary<string, uint> ListVehicleTypes()
         {
             Dictionary<string, uint> types = new Dictionary<string, uint>();
@@ -139,6 +136,29 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
             }
 
             return types;
+        }
+
+        
+
+        // IEnumerable<int> Square(int max)
+        public IEnumerator<Vehicle> GetEnumerator()
+        {
+            //throw new NotImplementedException();
+            foreach (var item in _parking)
+            {
+                if (item != null)
+                yield return item;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        {
+            throw new NotImplementedException();
         }
     }
 }

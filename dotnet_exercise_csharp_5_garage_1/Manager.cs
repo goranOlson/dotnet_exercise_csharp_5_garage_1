@@ -1,7 +1,5 @@
 ﻿using dotnet_exercise_csharp_5_garage_1.Classes;
 using dotnet_exercise_csharp_5_garage_1.UI;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 
 namespace dotnet_exercise_csharp_5_garage_1
 {
@@ -78,8 +76,31 @@ namespace dotnet_exercise_csharp_5_garage_1
                         break;
                 }
 
-                 UI.ExitMessageAction("Tryck på valfri tangent för att forsätta!!!!!");
+                UI.ExitMessageAction("Tryck på valfri tangent för att forsätta!!!!!");
+
+                UI.PrintLine("    Huvudmeny2");
+                UI.PrintLine("-----------------");
+                UI.PrintLine("1 Incheckning");
+                UI.PrintLine("2 Utcheckning");
+                UI.PrintLine("   3 Sök fordon");
+                UI.PrintLine("   4 Skapa nytt fordon");
+                UI.PrintLine("8 Lista fordon");
+                UI.PrintLine("9 Lista fordon efter typ");
+                UI.PrintLine("0 Avsluta");
+                UI.PrintLine("");
             } while (!exit);
+
+            LoopTest();
+        }
+
+        private void LoopTest()
+        {
+            UI.PrintLine("Loop:");
+            foreach (var item in _garage)
+            {
+                UI.PrintLine("> " + item.ToString());
+            }
+
         }
 
         private void PrintPageHeader()
@@ -109,20 +130,16 @@ namespace dotnet_exercise_csharp_5_garage_1
                 if (vehicle != null)
                 {
                     if (_handler.ParkVehicle(vehicle!))
-                        //UI.PrintLine($"{Environment.NewLine}Fordonet är nu parkerat!");
                         msg = $"{Environment.NewLine}Fordonet är nu parkerat!";
                     else
-                        //UI.PrintLine("Kunde tyvärr inte parkera fordonet - okänt fel!");
                         msg = $"{Environment.NewLine}Kunde tyvärr inte parkera fordonet - okänt fel!";
 
-                    //string msg = _handler.newPark(vehicle) ? "Fordonet är parkerat" : "Kunde tyvärr inte parkera fordonet - okänt fel!";
                     UI.PrintLine(msg);                
                 }
             }
             else
-            {
                 UI.PrintLine("Garaget är tyvärr redan fullt!");
-            }
+
             UI.ExitMessageAction();
         }
 
@@ -191,7 +208,6 @@ namespace dotnet_exercise_csharp_5_garage_1
         {
             Vehicle? vehicle = null;
 
-            // UI.PrintLine("");
             UI.PrintLine("Ange fordonstyp:");
             UI.PrintLine("");
             UI.PrintLine("1 Bil");
@@ -199,7 +215,7 @@ namespace dotnet_exercise_csharp_5_garage_1
             UI.PrintLine("3 Båt");
             UI.PrintLine("4 Flygplan");
             UI.PrintLine("5 Motorcykel");
-            UI.PrintLine("0 Avbryt");
+            UI.PrintLine($"0 Avbryt{Environment.NewLine}");
 
             uint menuChoice = UI.AskForUInt("Välj aktiviet (0 - 5)", 0, 5);  // Min/Max
 
@@ -239,6 +255,7 @@ namespace dotnet_exercise_csharp_5_garage_1
             _ui = new ConsoleUI();
 
             _garage = new Garage<Vehicle>(AskForGarageSize());
+            _ui.PrintLine("");
             _handler = new Handler(_ui, _garage);
 
             if (AskForSeedingData() == true)
@@ -252,12 +269,12 @@ namespace dotnet_exercise_csharp_5_garage_1
             UI.PrintLine($"Välkommen till Garage 1.0");
             UI.PrintLine($"========================={Environment.NewLine}");
 
-            return UI.AskForUInt("Ange antal platser i garaget");
+            return UI.AskForUInt($"Ange antal platser i garaget", 1);
         }
 
         private bool AskForSeedingData()
         {
-            string str = UI.AskForString("Fyll garaget med 6 fordon (j/n)", (input) =>
+            string str = UI.AskForString("Fyll garaget med upp till 6 fordon (j/n)", (input) =>
             {
                 if (!String.IsNullOrEmpty(input) && input.Length == 1 && (input.ToUpper() == "J" || input.ToUpper() == "N"))
                 {
