@@ -2,13 +2,13 @@
 {
     internal class Boat : Vehicle
     {
-        private double _length;
+        private uint _length;
         private uint _engines;
 
-        public double Length => _length;
+        public uint Length => _length;
         public uint Engines => _engines;
 
-        public Boat(string regNbr, string color, uint nbrWheels, double lenghtInFoot, uint numberOfEngines)
+        public Boat(string regNbr, string color, uint nbrWheels, uint lenghtInFoot, uint numberOfEngines)
             : base(regNbr, color, nbrWheels)
         {
             _length = lenghtInFoot;

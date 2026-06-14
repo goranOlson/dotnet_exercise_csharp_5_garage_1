@@ -6,13 +6,13 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
 {
     internal class Bus : Vehicle
     {
-        private double _length;
+        private uint _length;
         private uint _seats;
 
-        public double Length => _length;
+        public uint Length => _length;
         public uint Seats => _seats;
 
-        public Bus(string regNbr, string color, uint wheels, double length, uint nbrSeats) 
+        public Bus(string regNbr, string color, uint wheels, uint length, uint nbrSeats) 
             : base(regNbr, color, wheels)
         {
             _length = length;

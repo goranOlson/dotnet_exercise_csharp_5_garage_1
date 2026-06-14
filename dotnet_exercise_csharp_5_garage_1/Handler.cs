@@ -24,71 +24,95 @@ namespace dotnet_exercise_csharp_5_garage_1
         }
 
 
-        public void ParkVehicle()
+        public bool ParkCar(string regNbr, string color, uint nbrWheels, string fuleType, uint cylinderVolume)
         {
-            string message;  // = "";
+            bool success = false;
+
+            if (!_garage.IsFull) { 
+                Car car = new Car(regNbr, color, nbrWheels, fuleType, cylinderVolume);
+                if (_garage.AddVehicle(car))
+                    success = true;
+            }
+
+            return success;
+        }
+
+        public bool ParkBus(string regNbr, string color, uint nbrWheels, uint length, uint nbrSeats)
+        {
+            bool success = false;
 
             if (!_garage.IsFull)
             {
-                Vehicle? vehicle = CreateVehicle();
-                if (vehicle != null && !_garage.ParkCar(vehicle!))
-                    message = "Kunde inte parkera fordonet - okänt fel!";
-                else
-                    message = "Fordonet är nu parkerat!";
+                Bus bus = new Bus(regNbr, color, nbrWheels, length, nbrSeats);
+                if (_garage.AddVehicle(bus))
+                    success = true;
             }
-            else
-                message = "Kan inte parkera fordonet - garaget är tyvärr fullt";
 
-            UI.PrintLine($"{Environment.NewLine}{message}");
+            return success;
         }
-        public void PrintParked()
+
+        public bool ParkBoat(string regNbr, string color, uint nbrWheels, uint lenghtInFoot, uint numberOfEngines)
         {
-            if (_garage.Count > 0)
+            bool success = false;
+
+            if (!_garage.IsFull)
             {
-                foreach (var veichle in _garage)
-                {
-                    UI.PrintLine(veichle.ToString());
-                }
+                Boat boat = new Boat(regNbr, color, nbrWheels, lenghtInFoot, numberOfEngines);
+                if (_garage.AddVehicle(boat))
+                    success = true;
             }
-            else
-                UI.PrintLine("Garaget är tomt!");
+
+            return success;
         }
-        public void PrintByType()
+
+        public bool ParkAirplane(string regNbr, string color, uint nbrWheels, uint nbrSeats, uint nbrEngines)
         {
-            if (_garage.Count > 0)
-            {
-                Dictionary<string, uint> types = _garage.ListVehicleTypes();
+            bool success = false;
 
-                if (types.Count > 0) {
-                    foreach (var vehicle in types)
-                    {
-                        UI.PrintLine($"{vehicle.Key}: {vehicle.Value} st");
-                    }
-                }
+            if (!_garage.IsFull)
+            {
+                Airplane airplane = new Airplane(regNbr, color, nbrWheels, nbrSeats, nbrEngines);
+                if (_garage.AddVehicle(airplane))
+                    success = true;
             }
-            else
-                UI.PrintLine("Garaget är tomt!");
+
+            return success;
         }
 
-
-        public void RemoveVehicle()
+        public bool ParkMotorcycle(string regNbr, string color, uint nbrWheels, uint nbrOfSeats, uint cylinderVolume)
         {
-            string message;
-            string regNbr = UI.AskForString("Ange reg.nummer");
-            Vehicle? vehicle = _garage.GetVehicleByRegNbr(regNbr);
-            
-            if (vehicle != null)
-            {
-                if (_garage.UnparkVehicle(vehicle))
-                    message = "Fordonet är nu utcheckat!";
-                else
-                    message = "Fel - kunde inte checka ut fordonet!?";
-            }
-            else
-                message = "Hittade tyvärr inget fordon med reg.nummer: " + regNbr;
+            bool success = false;
 
-            UI.PrintLine(message);
+            if (!_garage.IsFull)
+            {
+                Motorcycle mc = new Motorcycle(regNbr, color, nbrWheels, nbrOfSeats, cylinderVolume);
+                if (_garage.AddVehicle(mc))
+                    success = true;
+            }
+
+            return success;
         }
+
+        public bool UnparkVehicle(Vehicle vehicle)
+        {
+            bool success = false;
+
+            if (Count > 0)
+            {
+                if (_garage.RemoveVehicle(vehicle))
+                    success = true;
+            }
+
+            return success;
+        }
+
+        
+
+        public Dictionary<string, uint> GetVehicleByType()
+        {
+            return _garage.ListVehicleTypes();
+        }
+
         public void SearchVehicleByRegNbr()
         {
             string regNbr = UI.AskForString("Ange fordonets reg.nummer");
@@ -102,65 +126,6 @@ namespace dotnet_exercise_csharp_5_garage_1
             }
             else
                 UI.PrintLine($"{Environment.NewLine}Hittade inget fordon med reg.nummer: {regNbr}");
-        }
-
-
-
-        private Vehicle? CreateVehicle()
-        {
-            Vehicle? vehicle = null;
-
-            UI.PrintLine("Ange fordonstyp:");
-            UI.PrintLine("");
-            UI.PrintLine("1 Bil");
-            UI.PrintLine("2 Buss");
-            UI.PrintLine("3 Båt");
-            UI.PrintLine("4 Flygplan");
-            UI.PrintLine("5 Motorcykel");
-            UI.PrintLine($"0 Avbryt{Environment.NewLine}");
-
-            uint menuChoice = UI.AskForUInt("Välj aktiviet (0 - 5)", 0, 5);  // Min/Max
-
-            // PrintPageHeader();
-
-            switch (menuChoice)
-            {
-                case 1:
-                    vehicle = CreateCar();
-                    break;
-
-                default:
-                    break;
-            }
-
-            return vehicle;
-        }
-
-
-        private Vehicle CreateCar()
-        {
-            // string regNbr, string color, uint wheels, string fuleType, double cylinderVolume
-
-            // Ask user for data that all vehicle types share
-            var commonData = AskBaseVehicleData();
-
-            // Ask user for date for date specific for 'Car'
-            string fuleType = UI.AskForString("Drivmedel");
-            uint cylinderVolume = UI.AskForUInt("Cylindervolym", 0);
-
-            return new Car(commonData.regNbr, commonData.color, commonData.wheels, fuleType, cylinderVolume);
-        }
-
-        
-        private (string regNbr, string color, uint wheels) AskBaseVehicleData()
-        {
-            UI.PrintLine($"{Environment.NewLine}Ange fordonsuppgifer:{Environment.NewLine}");
-
-            string regNbr = UI.AskForString("Reg.nummer");
-            string color = UI.AskForString("Färg");
-            uint wheels = UI.AskForUInt("Antal hjul", 0);
-
-            return (regNbr, color, wheels);
         }
     }
 }

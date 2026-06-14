@@ -1,5 +1,4 @@
-﻿using dotnet_exercise_csharp_5_garage_1.UI;
-using System.Collections;
+﻿using System.Collections;
 
 namespace dotnet_exercise_csharp_5_garage_1.Classes
 {
@@ -13,14 +12,12 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
         public bool IsFull => _count >= _capacity;
         public uint Capacity => _capacity;
 
-
         public Garage(uint capacity)
         {
             _capacity = capacity;
             _count = 0;
             _parking = new Vehicle[capacity];
         }
-
 
         public Vehicle? GetVehicleByRegNbr(string regNbr)
         {
@@ -36,7 +33,7 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
             return vehicle;
         }
 
-        public bool ParkCar(Vehicle vehicle)
+        public bool AddVehicle(Vehicle vehicle)
         {
             bool success = false;
 
@@ -57,7 +54,7 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
             return success;
         }
 
-        public bool UnparkVehicle(Vehicle vehicle)
+        public bool RemoveVehicle(Vehicle vehicle)
         {
             bool success = false;
 
