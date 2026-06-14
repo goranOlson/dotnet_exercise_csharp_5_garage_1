@@ -1,4 +1,6 @@
-﻿namespace dotnet_exercise_csharp_5_garage_1.UI
+﻿using System.Reflection.Metadata;
+
+namespace dotnet_exercise_csharp_5_garage_1.UI
 {
     internal class ConsoleUI
     {
@@ -70,7 +72,7 @@
         {
             bool keyIsPressed = false;
 
-            PrintLine($"{Environment.NewLine}{prompt}");
+            PrintLine($"{Environment.NewLine}{Environment.NewLine}{prompt}");
             ConsoleKeyInfo key = Console.ReadKey();
 
             if (key.ToString() != "")

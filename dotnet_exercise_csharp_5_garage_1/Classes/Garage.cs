@@ -1,28 +1,24 @@
-﻿using dotnet_exercise_csharp_5_garage_1.Interfaces;
-using dotnet_exercise_csharp_5_garage_1.UI;
+﻿using dotnet_exercise_csharp_5_garage_1.UI;
 using System.Collections;
 
 namespace dotnet_exercise_csharp_5_garage_1.Classes
 {
-    //internal class Garage: IGarage<Vehicle>
     internal class Garage<T> : IEnumerable<T> where T : Vehicle
     {
-        private Vehicle[] _parking = new Vehicle[10];
+        private readonly uint _capacity;
+        private uint _count;
+        private Vehicle[] _parking;
 
-        private readonly uint _capacity;  // Available parkings
-
-        private uint _count;  // Occupied parkings
-
-        // public uint Capacity => _capacity;
         public uint Count => _count;
-
         public bool IsFull => _count >= _capacity;
-
         public uint Capacity => _capacity;
+
 
         public Garage(uint capacity)
         {
             _capacity = capacity;
+            _count = 0;
+            _parking = new Vehicle[capacity];
         }
 
 
@@ -99,10 +95,7 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
                 {
                     if (_parking[i].RegNbr.ToUpper() == vehicle.RegNbr.ToUpper())
                     {
-                        // Console.WriteLine("Unparking RegNbr.: " + vehicle.RegNbr);
-
-                        // ToDo - Error: _parking[i] = null; 
-                        _parking[i] = null;
+                        _parking[i] = null!;
                         _count--;
                         success = true;
                     }
