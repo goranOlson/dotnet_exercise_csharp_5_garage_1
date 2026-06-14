@@ -1,6 +1,7 @@
 ﻿using dotnet_exercise_csharp_5_garage_1.Classes;
 using dotnet_exercise_csharp_5_garage_1.UI;
 using Microsoft.VisualBasic;
+using System.Diagnostics;
 using System.Reflection.Metadata;
 
 namespace dotnet_exercise_csharp_5_garage_1
@@ -40,25 +41,70 @@ namespace dotnet_exercise_csharp_5_garage_1
 
             UI.PrintLine($"{Environment.NewLine}{message}");
         }
-
-        public void CheckOutVehicle()
+        public void PrintParked()
         {
-            string returnMsg;
+            if (_garage.Count > 0)
+            {
+                foreach (var veichle in _garage)
+                {
+                    UI.PrintLine(veichle.ToString());
+                }
+            }
+            else
+                UI.PrintLine("Garaget är tomt!");
+        }
+        public void PrintByType()
+        {
+            if (_garage.Count > 0)
+            {
+                Dictionary<string, uint> types = _garage.ListVehicleTypes();
+
+                if (types.Count > 0) {
+                    foreach (var vehicle in types)
+                    {
+                        UI.PrintLine($"{vehicle.Key}: {vehicle.Value} st");
+                    }
+                }
+            }
+            else
+                UI.PrintLine("Garaget är tomt!");
+        }
+
+
+        public void RemoveVehicle()
+        {
+            string message;
             string regNbr = UI.AskForString("Ange reg.nummer");
             Vehicle? vehicle = _garage.GetVehicleByRegNbr(regNbr);
             
             if (vehicle != null)
             {
-                if (UnparkVehicle(vehicle))
-                    returnMsg = "Fordonet är nu utcheckat!";
+                if (_garage.UnparkVehicle(vehicle))
+                    message = "Fordonet är nu utcheckat!";
                 else
-                    returnMsg = "Fel - kunde inte checka ut fordonet!?";
+                    message = "Fel - kunde inte checka ut fordonet!?";
             }
             else
-                returnMsg = "Hittade tyvärr inget fordon med reg.nummer: " + regNbr;
+                message = "Hittade tyvärr inget fordon med reg.nummer: " + regNbr;
 
-            UI.PrintLine(returnMsg);
+            UI.PrintLine(message);
         }
+        public void SearchVehicleByRegNbr()
+        {
+            string regNbr = UI.AskForString("Ange fordonets reg.nummer");
+
+            Vehicle? vehicle = _garage.GetVehicleByRegNbr(regNbr);
+
+            if (vehicle != null)
+            {
+                UI.PrintLine($"{Environment.NewLine}Fordonsuppgifter:{Environment.NewLine}");
+                UI.PrintLine(vehicle.ToString());
+            }
+            else
+                UI.PrintLine($"{Environment.NewLine}Hittade inget fordon med reg.nummer: {regNbr}");
+        }
+
+
 
         private Vehicle? CreateVehicle()
         {
@@ -105,26 +151,7 @@ namespace dotnet_exercise_csharp_5_garage_1
             return new Car(commonData.regNbr, commonData.color, commonData.wheels, fuleType, cylinderVolume);
         }
 
-        public void SearchVehicleByRegNbr()
-        {
-            string regNbr = UI.AskForString("Ange fordonets reg.nummer");
-
-            Vehicle? vehicle = _garage.GetVehicleByRegNbr(regNbr);
-
-            if(vehicle != null)
-            {
-                UI.PrintLine($"{Environment.NewLine}Fordonsuppgifter:{Environment.NewLine}");
-                UI.PrintLine(vehicle.ToString());
-            }
-            else
-            {
-                UI.PrintLine($"{Environment.NewLine}Hittade inget fordon med reg.nummer: {regNbr}");
-            }
-
-
-            //return "";
-        }
-
+        
         private (string regNbr, string color, uint wheels) AskBaseVehicleData()
         {
             UI.PrintLine($"{Environment.NewLine}Ange fordonsuppgifer:{Environment.NewLine}");
@@ -135,20 +162,5 @@ namespace dotnet_exercise_csharp_5_garage_1
 
             return (regNbr, color, wheels);
         }
-
-
-
-
-
-
-        public void PrintParkedVehicles(ConsoleUI ui) => _garage.PrintParkedVehicles(ui);
-
-        public void PrintVehiclesByType(ConsoleUI ui) => _garage.PrintVehiclesByType(ui);
-
-        public bool UnparkVehicle(Vehicle vehicle) => _garage.UnparkVehicle(vehicle);
-
-
-
-
     }
 }

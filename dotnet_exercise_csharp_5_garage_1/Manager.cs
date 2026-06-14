@@ -5,7 +5,7 @@ namespace dotnet_exercise_csharp_5_garage_1
 {
     internal class Manager
     {
-        private ConsoleUI _ui;  // => IUI
+        private ConsoleUI _ui;
         private Garage<Vehicle> _garage;
         private Handler _handler;
 
@@ -81,37 +81,14 @@ namespace dotnet_exercise_csharp_5_garage_1
 
                     case 0:
                         exit = true;
+                        UI.PrintLine($"{Environment.NewLine}Programmet avslutas...");
                         break;
                 }
                 UI.ExitMessageAction("Tryck på valfri tangent för att forsätta!!!!!");
             } while (!exit);
 
-            LoopTest();
         }
-
-        private void LoopTest()
-        {
-            UI.PrintLine("Loop:");
-            foreach (var item in _garage)
-            {
-                UI.PrintLine("> " + item.ToString());
-            }
-
-        }
-
-        private void PrintPageHeader()
-        {
-            UI.Clear();
-            // Print Header
-            //UI.PrintLine($"Välkommen till Garage 1.0          {_handler.Capacity - _handler.Count} av {_handler.Capacity} platser lediga");
-            UI.PrintLine($"Välkommen till Garage 1.0          {CreateOccupancyText()}");
-            UI.PrintLine($"========================================================={Environment.NewLine}");
-        }
-
-        private void PrintSubHeader(string header)
-        {
-            UI.PrintLine($"_______ {header} _______{Environment.NewLine}");
-        }
+       
 
         private void CheckinVehicle()
         {
@@ -120,7 +97,7 @@ namespace dotnet_exercise_csharp_5_garage_1
             
             // Create and park the vehicle
             Handler.ParkVehicle();
-            UI.ExitMessageAction();
+            // UI.ExitMessageAction();
         }
 
         private void CheckOutVehicle()
@@ -129,8 +106,8 @@ namespace dotnet_exercise_csharp_5_garage_1
             PrintSubHeader("Checka ut fordon");
 
             // Checkout vehicle and show info
-            Handler.CheckOutVehicle();
-            UI.ExitMessageAction();
+            Handler.RemoveVehicle();
+            //UI.ExitMessageAction();
         }
 
         private void SearchVehicleByRegNbr()
@@ -140,8 +117,29 @@ namespace dotnet_exercise_csharp_5_garage_1
 
             // Search parked vehicle by reg.nbr and show details
             Handler.SearchVehicleByRegNbr();
-            UI.ExitMessageAction();
+            // UI.ExitMessageAction();
         }
+
+        private void SearchSpecial()
+        {
+            PrintPageHeader();
+            PrintSubHeader("Sök fordon utifrån egenskaper");
+            UI.PrintLine($"Tom rad om ingen data{Environment.NewLine}");
+
+            // Color, NbrOfWheels
+            // Alla svarta fordon med 4 hjul
+            // Alla motorcyklar som är rosa och har 3 hjul
+            // Alla lastbilar
+            // Alla röda fordon
+
+            string vehicleType = UI.AskForString("Fordonstyp", null, true);
+            string color = UI.AskForString("Färg", null, true);
+            string nbrWheels = UI.AskForString("Antal hjul", null, true);
+            
+
+
+        }
+
 
         private string CreateOccupancyText()
         {
@@ -151,28 +149,34 @@ namespace dotnet_exercise_csharp_5_garage_1
         private void PrintParkedVehicles()
         {
             PrintPageHeader();
-            PrintSubHeader($"Parkerade fordon ({CreateOccupancyText()})");
-            if (Handler.Count > 0)
-                Handler.PrintParkedVehicles(UI);
-            else
-                UI.PrintLine("Garaget är tomt!!!");
-            // UI.ExitMessageAction();
+            PrintSubHeader($"Parkerade fordon ({_garage.Count} st)");
+            
+            // List parked vehicles
+            Handler.PrintParked();
         }
-
         private void PrintVehicleByType()
         {
             PrintPageHeader();
             PrintSubHeader($"Parkerade fordon utifrån typ ({CreateOccupancyText()})");
-            if (Handler.Count > 0)
-                Handler.PrintVehiclesByType(UI);
-            else
-                UI.PrintLine("Garaget är tomt!!!");
-            // UI.ExitMessageAction();
+            // List parked vehicles by types with count
+            Handler.PrintByType();
+        }
+        private void PrintPageHeader()
+        {
+            UI.Clear();
+            // Print Header
+            //UI.PrintLine($"Välkommen till Garage 1.0          {_handler.Capacity - _handler.Count} av {_handler.Capacity} platser lediga");
+            UI.PrintLine($"Välkommen till Garage 1.0          {CreateOccupancyText()}");
+            UI.PrintLine($"========================================================={Environment.NewLine}");
+        }
+        private void PrintSubHeader(string header)
+        {
+            UI.PrintLine($"_______ {header} _______{Environment.NewLine}");
         }
 
 
 
-        
+
 
         private uint AskForGarageSize()
         {

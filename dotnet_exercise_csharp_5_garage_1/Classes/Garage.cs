@@ -57,34 +57,6 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
             return success;
         }
 
-
-        public void PrintParkedVehicles(ConsoleUI ui)
-        {
-            if (_count > 0)
-            {
-                for (int i = 0; i < _parking.Length; i++)
-                {
-                    if (_parking[i] != null)
-                    {
-                        ui.PrintLine("- " + _parking[i].ToString());
-                    }
-                }
-            }
-        }
-
-
-        public void PrintVehiclesByType(ConsoleUI ui)
-        {
-            var types = ListVehicleTypes();
-            if (types.Count > 0)
-            {
-                foreach (var item in types)
-                {
-                    ui.PrintLine($"{item.Key}: {item.Value} st");
-                }
-            }
-        }
-
         public bool UnparkVehicle(Vehicle vehicle)
         {
             bool success = false;
@@ -105,7 +77,7 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
             return success;
         }
 
-        private Dictionary<string, uint> ListVehicleTypes()
+        public Dictionary<string, uint> ListVehicleTypes()
         {
             Dictionary<string, uint> types = new Dictionary<string, uint>();
             if (Count > 0)
@@ -131,9 +103,6 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
             return types;
         }
 
-        
-
-        // IEnumerable<int> Square(int max)
         public IEnumerator<Vehicle> GetEnumerator()
         {
             //throw new NotImplementedException();

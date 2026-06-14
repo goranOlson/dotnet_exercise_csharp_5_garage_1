@@ -6,7 +6,7 @@ namespace dotnet_exercise_csharp_5_garage_1.UI
     {
         
 
-        public string AskForString(string prompt, Predicate<string>? validate = null)
+        public string AskForString(string prompt, Predicate<string>? validate = null, bool emptyOk = false)
         {
             string answer;
             bool success = false;
@@ -16,7 +16,7 @@ namespace dotnet_exercise_csharp_5_garage_1.UI
                 Print($"{prompt}: ");
                 answer = GetInput();
 
-                if ((string.IsNullOrWhiteSpace(answer)) || (validate != null && !validate(answer)))
+                if (emptyOk == false && ((string.IsNullOrWhiteSpace(answer)) || (validate != null && !validate(answer))))
                 {
                     Print($"Felaktig inmating!{Environment.NewLine}");
                 }
