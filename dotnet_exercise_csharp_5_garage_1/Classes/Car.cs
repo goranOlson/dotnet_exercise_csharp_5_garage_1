@@ -19,7 +19,7 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
 
         public override string ToString()
         {
-            return $"Car: {base.ToString()}, {FuleType}, {CylinderVolume} cc";
+            return $"Bil: {base.ToString()}, {FuleType}, {CylinderVolume} cc";
         }
     }
 }

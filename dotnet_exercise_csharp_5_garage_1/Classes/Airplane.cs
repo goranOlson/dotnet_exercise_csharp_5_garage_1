@@ -17,7 +17,7 @@
 
         public override string ToString()
         {
-            return $"Airplane: {base.ToString()}, {Engines} motorer, {Seats} säten";
+            return $"Flygplan: {base.ToString()}, {Engines} motorer, {Seats} säten";
         }
     }
 }

@@ -22,7 +22,7 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
 
         public override string ToString()
         {
-            return $"Bus: {base.ToString()}, {Length} m, {Seats} säten";
+            return $"Buss: {base.ToString()}, {Length} m, {Seats} säten";
         }
     }
 }

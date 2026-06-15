@@ -1,8 +1,4 @@
 ﻿using dotnet_exercise_csharp_5_garage_1.Classes;
-using dotnet_exercise_csharp_5_garage_1.UI;
-using Microsoft.VisualBasic;
-using System.Diagnostics;
-using System.Reflection.Metadata;
 
 namespace dotnet_exercise_csharp_5_garage_1
 {
@@ -13,12 +9,10 @@ namespace dotnet_exercise_csharp_5_garage_1
         public uint Count => _garage.Count;
         public bool IsFull => _garage.IsFull;
 
-
         public Handler(Garage<Vehicle> garage)
         {
             _garage = garage;
         }
-
 
         public bool ParkCar(string regNbr, string color, uint nbrWheels, string fuleType, uint cylinderVolume)
         {

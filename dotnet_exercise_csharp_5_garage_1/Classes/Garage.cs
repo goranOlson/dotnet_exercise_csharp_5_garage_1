@@ -2,7 +2,7 @@
 
 namespace dotnet_exercise_csharp_5_garage_1.Classes
 {
-    internal class Garage<T> : IEnumerable<T> where T : Vehicle
+    internal class Garage<T> : IEnumerable<T>, IGarage<T> where T : Vehicle
     {
         private readonly uint _capacity;
         private uint _count;
@@ -65,7 +65,7 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
             foreach (var item in _parking)
             {
                 if (item != null)
-                yield return (T)item;
+                    yield return (T)item;
             }
         }
 

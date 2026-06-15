@@ -21,7 +21,7 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
 
         public override string ToString()
         {
-            return $"Motorcycle: {base.ToString()}, {Seats} säten, {CylinderVolume} cc";
+            return $"Motorcykel: {base.ToString()}, {Seats} säten, {CylinderVolume} cc";
 
         }
     }
