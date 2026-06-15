@@ -15,7 +15,7 @@
 
         public override string ToString()
         {
-            return $"Reg.nbr: {RegNbr}, färg: {Color}, antal hjul: {NbrOfWheels}";
+            return $"{RegNbr}, {Color}, {NbrOfWheels} hjul";
         }
     }
 }

@@ -17,7 +17,7 @@
 
         public override string ToString()
         {
-            return $"Typ: Boat, " + base.ToString() + $", längd: {Length} fot, antal motorer: {Engines}";
+            return $"Boat: {base.ToString()}, {Length} fot, {Engines} motorer";
         }
     }
 

@@ -8,19 +8,15 @@ namespace dotnet_exercise_csharp_5_garage_1
 {
     internal class Handler
     {
-        private ConsoleUI _ui;
-        private Garage<Vehicle> _garage;
-
+        private readonly Garage<Vehicle> _garage;
         public uint Capacity => _garage.Capacity;
         public uint Count => _garage.Count;
         public bool IsFull => _garage.IsFull;
-        private ConsoleUI UI => _ui;
 
 
-        public Handler(ConsoleUI ui, Garage<Vehicle> garage)
+        public Handler(Garage<Vehicle> garage)
         {
             _garage = garage;
-            _ui = ui;
         }
 
 
@@ -106,26 +102,54 @@ namespace dotnet_exercise_csharp_5_garage_1
             return success;
         }
 
-        
+        public List<Vehicle> SearchWithFilter(string type, string color, int nbrWheels)
+        {
+            IEnumerable<Vehicle> query = _garage.Where(v => v != null);
+            
+            // Remove results if no search criterias appended!
+            if (type == "" && color == "" && nbrWheels < 0)
+            {
+                query = query.Where(v => v.GetType().Name.ToUpper() == "");
+            }
+            else
+            {
+                // Else append search criterias
+                if (type != "")
+                    query = query.Where(v => v.GetType().Name.ToUpper() == type.ToUpper());
+
+                if (color != "")
+                    query = query.Where(v => v.Color.ToUpper() == color.ToUpper());
+
+                if (nbrWheels >= 0)
+                    query = query.Where(v => v.NbrOfWheels == nbrWheels);
+            }
+
+            return query.ToList();
+        }
 
         public Dictionary<string, uint> GetVehicleByType()
         {
-            return _garage.ListVehicleTypes();
+            Dictionary<string, uint> types = new Dictionary<string, uint>();
+
+            if (Count > 0)
+            {
+                // Count unique vehicle by type
+                foreach (Vehicle v in _garage)
+                {
+                    string name = v.GetType().Name;  // Get class name
+                    if (types.ContainsKey(name))
+                        types[name] += 1;
+                    else
+                        types.Add(name, 1);
+                }
+            }
+
+            return types;
         }
 
-        public void SearchVehicleByRegNbr()
+        public Vehicle? SearchByRegNbr(string regNbr)
         {
-            string regNbr = UI.AskForString("Ange fordonets reg.nummer");
-
-            Vehicle? vehicle = _garage.GetVehicleByRegNbr(regNbr);
-
-            if (vehicle != null)
-            {
-                UI.PrintLine($"{Environment.NewLine}Fordonsuppgifter:{Environment.NewLine}");
-                UI.PrintLine(vehicle.ToString());
-            }
-            else
-                UI.PrintLine($"{Environment.NewLine}Hittade inget fordon med reg.nummer: {regNbr}");
+            return _garage.FirstOrDefault(v => v != null && v.RegNbr.ToUpper() == regNbr.ToUpper());
         }
     }
 }

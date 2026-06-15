@@ -6,7 +6,7 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
     {
         private readonly uint _capacity;
         private uint _count;
-        private Vehicle[] _parking;
+        private readonly Vehicle[] _parking;
 
         public uint Count => _count;
         public bool IsFull => _count >= _capacity;
@@ -17,20 +17,6 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
             _capacity = capacity;
             _count = 0;
             _parking = new Vehicle[capacity];
-        }
-
-        public Vehicle? GetVehicleByRegNbr(string regNbr)
-        {
-            Vehicle? vehicle = null;
-
-            if (Count > 0 && !String.IsNullOrEmpty(regNbr))
-            {
-                var list = _parking.ToList();
-                var result = list.FirstOrDefault(v => v != null && v.RegNbr.ToUpper() == regNbr.ToUpper());
-                vehicle = result;
-            }
-
-            return vehicle;
         }
 
         public bool AddVehicle(Vehicle vehicle)
@@ -74,39 +60,12 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
             return success;
         }
 
-        public Dictionary<string, uint> ListVehicleTypes()
+        public IEnumerator<T> GetEnumerator()
         {
-            Dictionary<string, uint> types = new Dictionary<string, uint>();
-            if (Count > 0)
-            {
-                // Count unique vehicle types
-                for (int i = 0; i < _capacity; i++)
-                {
-                    if (_parking[i] != null)
-                    {
-                        string name = _parking[i].GetType().Name;
-                        if (types.ContainsKey(name))
-                        {
-                            types[name] += 1;
-                        }
-                        else
-                        {
-                            types.Add(name, 1);
-                        }
-                    }
-                }
-            }
-
-            return types;
-        }
-
-        public IEnumerator<Vehicle> GetEnumerator()
-        {
-            //throw new NotImplementedException();
             foreach (var item in _parking)
             {
                 if (item != null)
-                yield return item;
+                yield return (T)item;
             }
         }
 
@@ -117,7 +76,7 @@ namespace dotnet_exercise_csharp_5_garage_1.Classes
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return GetEnumerator();
         }
     }
 }
