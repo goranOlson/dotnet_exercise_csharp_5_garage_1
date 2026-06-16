@@ -6,8 +6,8 @@ namespace dotnet_exercise_csharp_5_garage_1
     internal class Manager
     {
         private readonly IUI _ui;
-        private Garage<Vehicle> _garage;
-        private Handler _handler;
+        private IGarage<Vehicle> _garage;
+        private IHandler _handler;
 
         public Manager(IUI ui)
         {
@@ -25,6 +25,8 @@ namespace dotnet_exercise_csharp_5_garage_1
             if (AskForSeedingData() == true)
                 SeedData(_garage);
         }
+
+        
 
         public void Run()
         {
@@ -390,7 +392,7 @@ namespace dotnet_exercise_csharp_5_garage_1
             return str.ToUpper() == "J" ? true : false;
         }
 
-        private void SeedData(Garage<Vehicle> garage)
+        private void SeedData(IGarage<Vehicle> garage)
         {
             Vehicle[] testData = new Vehicle[]
             {

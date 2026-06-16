@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace dotnet_exercise_csharp_5_garage_1.Classes
 {
-    public class Garage<T> : IEnumerable<T>, IGarage<T> where T : Vehicle
+    public class Garage<T> : IGarage<T> where T : Vehicle
     {
         private readonly uint _capacity;
         private uint _count;
