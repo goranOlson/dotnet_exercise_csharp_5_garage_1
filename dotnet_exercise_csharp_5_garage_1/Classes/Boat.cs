@@ -1,6 +1,6 @@
 ﻿namespace dotnet_exercise_csharp_5_garage_1.Classes
 {
-    internal class Boat : Vehicle
+    public class Boat : Vehicle
     {
         private uint _length;
         private uint _engines;

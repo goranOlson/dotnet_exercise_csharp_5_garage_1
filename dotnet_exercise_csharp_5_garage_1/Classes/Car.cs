@@ -1,8 +1,6 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace dotnet_exercise_csharp_5_garage_1.Classes
+﻿namespace dotnet_exercise_csharp_5_garage_1.Classes
 {
-    internal class Car : Vehicle
+    public class Car : Vehicle
     {
         private uint _cylinderVolume;
         private string _fuleType;

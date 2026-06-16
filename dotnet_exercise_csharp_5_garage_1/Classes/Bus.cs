@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace dotnet_exercise_csharp_5_garage_1.Classes
+﻿namespace dotnet_exercise_csharp_5_garage_1.Classes
 {
-    internal class Bus : Vehicle
+    public class Bus : Vehicle
     {
         private uint _length;
         private uint _seats;

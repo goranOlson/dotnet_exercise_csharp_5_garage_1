@@ -1,11 +1,9 @@
-﻿using System.Reflection.Metadata;
+﻿using dotnet_exercise_csharp_5_garage_1.Interfaces;
 
 namespace dotnet_exercise_csharp_5_garage_1.UI
 {
-    internal class ConsoleUI
+    internal class ConsoleUI : IUI
     {
-        
-
         public string AskForString(string prompt, Predicate<string>? validate = null, bool emptyOk = false)
         {
             string answer;
@@ -52,7 +50,7 @@ namespace dotnet_exercise_csharp_5_garage_1.UI
         {
             Console.Clear();
         }
-        
+
         public string GetInput()
         {
             return Console.ReadLine() ?? string.Empty;

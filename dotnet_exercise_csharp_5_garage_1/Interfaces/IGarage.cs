@@ -2,11 +2,14 @@
 
 namespace dotnet_exercise_csharp_5_garage_1.Interfaces
 {
-    public interface IGarage<T> : IEnumerable<T> where T : Vehicle
+    internal interface IGarage<T> where T : Vehicle
     {
         uint Capacity { get; }
         uint Count { get; }
-        bool AddVehicle(T vehicle);
-        bool RemoveVehicle(T vehicle);
+        bool IsFull { get; }
+
+        bool AddVehicle(Vehicle vehicle);
+        IEnumerator<T> GetEnumerator();
+        bool RemoveVehicle(Vehicle vehicle);
     }
 }

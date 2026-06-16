@@ -1,36 +1,29 @@
 ﻿using dotnet_exercise_csharp_5_garage_1.Classes;
-using dotnet_exercise_csharp_5_garage_1.UI;
+using dotnet_exercise_csharp_5_garage_1.Interfaces;
 
 namespace dotnet_exercise_csharp_5_garage_1
 {
     internal class Manager
     {
-        private ConsoleUI _ui;
+        private readonly IUI _ui;
         private Garage<Vehicle> _garage;
         private Handler _handler;
 
-        public Manager(string uiType)
+        public Manager(IUI ui)
         {
-            Init(uiType);
+            _ui = ui;
+            Init();
         }
 
-        private void Init(string uiType)
+        private void Init()
         {
-            if (uiType == "console")
-            {
-                _ui = new ConsoleUI();
+            _garage = new Garage<Vehicle>(AskForGarageSize());
+            _ui.PrintLine("");
+            _handler = new Handler(_garage);
 
-                _garage = new Garage<Vehicle>(AskForGarageSize());
-                _ui.PrintLine("");
-                _handler = new Handler(_garage);
-
-                if (AskForSeedingData() == true)
-                    SeedData(_garage);
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
+            //Seed garage with vehicles?
+            if (AskForSeedingData() == true)
+                SeedData(_garage);
         }
 
         public void Run()
@@ -43,7 +36,6 @@ namespace dotnet_exercise_csharp_5_garage_1
             {
                 PrintPageHeader();
 
-                // Print menu
                 _ui.PrintLine("       Huvudmeny");
                 _ui.PrintLine("-------------------------");
                 _ui.PrintLine("1 Incheckning");
@@ -83,7 +75,6 @@ namespace dotnet_exercise_csharp_5_garage_1
                 }
                 _ui.ExitMessageAction("Tryck på valfri tangent för att forsätta!");
             } while (!exit);
-
         }
        
 
