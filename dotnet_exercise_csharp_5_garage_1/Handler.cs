@@ -5,7 +5,7 @@ namespace dotnet_exercise_csharp_5_garage_1
 {
     internal class Handler : IHandler
     {
-        private IGarage<Vehicle> _garage;
+        private readonly IGarage<Vehicle> _garage;
 
         public uint Capacity => _garage.Capacity;
         public uint Count => _garage.Count;

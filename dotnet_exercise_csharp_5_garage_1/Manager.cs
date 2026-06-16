@@ -5,28 +5,22 @@ namespace dotnet_exercise_csharp_5_garage_1
 {
     internal class Manager
     {
+        const string messageGarageEmpty = "Garaget är tomt!";
+
         private readonly IUI _ui;
-        private IGarage<Vehicle> _garage;
-        private IHandler _handler;
+        private readonly IGarage<Vehicle> _garage;
+        private readonly IHandler _handler;
 
         public Manager(IUI ui)
         {
             _ui = ui;
-            Init();
-        }
-
-        private void Init()
-        {
             _garage = new Garage<Vehicle>(AskForGarageSize());
             _ui.PrintLine("");
             _handler = new Handler(_garage);
 
-            //Seed garage with vehicles?
             if (AskForSeedingData() == true)
                 SeedData(_garage);
-        }
-
-        
+        }        
 
         public void Run()
         {
@@ -79,7 +73,6 @@ namespace dotnet_exercise_csharp_5_garage_1
             } while (!exit);
         }
        
-
         private void CheckinVehicle()
         {
             PrintPageHeader();
@@ -124,7 +117,6 @@ namespace dotnet_exercise_csharp_5_garage_1
             else
                 _ui.PrintLine("Garaget är tyvärr fullt - kan inte parkera flera fordon!");
         }
-
 
         private void ParkCar(string regNbr, string color, uint nbrWheels)
         {
@@ -191,7 +183,6 @@ namespace dotnet_exercise_csharp_5_garage_1
             _ui.PrintLine($"{Environment.NewLine}{message}");
         }
 
-
         private (string regNbr, string color, uint wheels) AskBaseVehicleData()
         {
             _ui.PrintLine($"{Environment.NewLine}Ange fordonsuppgifer:{Environment.NewLine}");
@@ -202,8 +193,6 @@ namespace dotnet_exercise_csharp_5_garage_1
 
             return (regNbr, color, wheels);
         }
-
-
 
         private void CheckOutVehicle()
         {
@@ -227,7 +216,7 @@ namespace dotnet_exercise_csharp_5_garage_1
                     message = $"Hittade tyvärr inget fordon med reg.nummer: '{regNbr}'";
             }
             else
-                message = "Garaget är tomt!";
+                message = messageGarageEmpty;
 
             _ui.PrintLine($"{Environment.NewLine}{message}");
         }
@@ -237,92 +226,110 @@ namespace dotnet_exercise_csharp_5_garage_1
             PrintPageHeader();
             PrintSubHeader("Sök på reg.nummer");
 
-            string regNbr = _ui.AskForString("Ange fordonets reg.nummer");
-
-            // Search parked vehicle by reg.nbr and show details
-            Vehicle? vehicle = _handler.SearchByRegNbr(regNbr);
-            if (vehicle != null)
+            if (_garage.Count > 0)
             {
-                _ui.PrintLine($"{Environment.NewLine}Fordonsuppgifter:{Environment.NewLine}");
-                _ui.PrintLine(vehicle.ToString());
+                string regNbr = _ui.AskForString("Ange fordonets reg.nummer");
+
+                // Search parked vehicle by reg.nbr and show details
+                Vehicle? vehicle = _handler.SearchByRegNbr(regNbr);
+                if (vehicle != null)
+                {
+                    _ui.PrintLine($"{Environment.NewLine}Fordonsuppgifter:{Environment.NewLine}");
+                    _ui.PrintLine(vehicle.ToString());
+                }
+                else
+                    _ui.PrintLine($"{Environment.NewLine}Hittade inget fordon med reg.nummer: {regNbr}");
             }
             else
-                _ui.PrintLine($"{Environment.NewLine}Hittade inget fordon med reg.nummer: {regNbr}");
-
+                _ui.PrintLine(messageGarageEmpty);
         }
 
         private void SearchSpecial()
         {
             PrintPageHeader();
             PrintSubHeader("Sök fordon med filter");
-            _ui.PrintLine($"Tom rad om ingen sökkriterie{Environment.NewLine}");
 
-            // Ask for search criteria
-            string? vehicleType = _ui.AskForString("Fordonstyp", null, true).Trim();
-            string? color = _ui.AskForString("Färg", null, true).Trim();
-            string wheels = _ui.AskForString("Antal hjul", null, true);
-
-            // convert vehicle type to english
-            string type = "";
-
-            if (vehicleType != null)
+            if (_garage.Count > 0)
             {
-                switch (vehicleType.ToUpper())
+                // Ask for search criteria
+                _ui.PrintLine($"Tom rad om ingen sökkriterie{Environment.NewLine}");
+
+                string? vehicleType = _ui.AskForString("Fordonstyp", null, true).Trim();
+                string? color = _ui.AskForString("Färg", null, true).Trim();
+                string wheels = _ui.AskForString("Antal hjul", null, true);
+
+                // convert vehicle type to english
+                string type = "";
+
+                if (vehicleType != null)
                 {
-                    case "BIL": type = "Car";  break;
-                    case "BUSS": type = "Bus"; break;
-                    case "BÅT": type = "Boat"; break;
-                    case "FLYGPLAN": type = "Airplane"; break;
-                    case "MOTORCYKEL": type = "Motorcycle"; break;
-                    default: type = ""; break;
+                    switch (vehicleType.ToUpper())
+                    {
+                        case "BIL": type = "Car";  break;
+                        case "BUSS": type = "Bus"; break;
+                        case "BÅT": type = "Boat"; break;
+                        case "FLYGPLAN": type = "Airplane"; break;
+                        case "MOTORCYKEL": type = "Motorcycle"; break;
+                        default: type = ""; break;
+                    }
                 }
-            }
 
-            int nbrWheels = -1;
-            if (int.TryParse(wheels, out int nbr))
-            {
-                if (nbr >= 0)
-                    nbrWheels = nbr;
-            }
-
-            // Perform search by criterias
-            List<Vehicle> result = _handler.SearchWithFilter(type, color, nbrWheels);
-
-            // Print search results
-            _ui.PrintLine($"{Environment.NewLine}Söker fordon med filter:");
-            _ui.PrintLine($"-----------------------{Environment.NewLine}");
-            if (result.Count > 0)
-            {
-                foreach (var item in result)
+                int nbrWheels = -1;
+                if (int.TryParse(wheels, out int nbr))
                 {
-                    Console.WriteLine($"{item.ToString()}");
+                    if (nbr >= 0)
+                        nbrWheels = nbr;
                 }
+
+                // Perform search by criterias
+                List<Vehicle> result = _handler.SearchWithFilter(type, color, nbrWheels);
+
+                // Print search results
+                _ui.PrintLine($"{Environment.NewLine}Söker fordon med filter:");
+                _ui.PrintLine($"-----------------------{Environment.NewLine}");
+                if (result.Count > 0)
+                {
+                    foreach (var item in result)
+                    {
+                        Console.WriteLine($"{item.ToString()}");
+                    }
+                }
+                else
+                    _ui.PrintLine("Hittade inget fordon!");
             }
             else
-                _ui.PrintLine("Hittade inget fordon!");
+                _ui.PrintLine(messageGarageEmpty);
         }
-
 
         private string CreateOccupancyText()
         {
             return $"{_handler.Capacity - _handler.Count} av {_handler.Capacity} platser lediga";
         }
+
         private void PrintParkedVehicles()
         {
             PrintPageHeader();
             PrintSubHeader($"Parkerade fordon ({_garage.Count} st)");
-            
+
             // List parked vehicles
-            foreach (var item in _garage)
+            if (_garage.Count > 0)
             {
-                _ui.PrintLine(item.ToString());
+                foreach (var item in _garage)
+                {
+                    _ui.PrintLine(item.ToString());
+                }
             }
+            else
+                _ui.PrintLine(messageGarageEmpty);
+
         }
+        
         private void PrintVehicleByType()
         {
             PrintPageHeader();
             PrintSubHeader($"Parkerade fordon utifrån typ ({CreateOccupancyText()})");
 
+            // Get number of parked vehicles by typ and show result
             Dictionary<string, uint> listTypes = _handler.GetVehicleByType();
             if (listTypes.Count > 0)
             {
@@ -332,11 +339,9 @@ namespace dotnet_exercise_csharp_5_garage_1
                 }
             }
             else
-            {
                 _ui.PrintLine("Parkerade fordon saknas!");
-            }
-
         }
+        
         private void PrintPageHeader()
         {
             _ui.Clear();
@@ -345,12 +350,11 @@ namespace dotnet_exercise_csharp_5_garage_1
             _ui.PrintLine($"Välkommen till Garage 1.0          {CreateOccupancyText()}");
             _ui.PrintLine($"========================================================={Environment.NewLine}");
         }
+        
         private void PrintSubHeader(string header)
         {
             _ui.PrintLine($"_______ {header} _______{Environment.NewLine}");
         }
-
-
 
 
         private uint AskCreateVehicleType(uint min, uint max)
