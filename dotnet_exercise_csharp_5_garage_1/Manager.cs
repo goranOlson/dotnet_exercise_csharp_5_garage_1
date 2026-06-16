@@ -9,11 +9,6 @@ namespace dotnet_exercise_csharp_5_garage_1
         private Garage<Vehicle> _garage;
         private Handler _handler;
 
-        private ConsoleUI UI => _ui;
-        private Garage<Vehicle> Garage => _garage;
-        private Handler Handler => _handler;
-        
-
         public Manager(string uiType)
         {
             Init(uiType);
@@ -21,16 +16,20 @@ namespace dotnet_exercise_csharp_5_garage_1
 
         private void Init(string uiType)
         {
-            // TODO - if (uiType == "console")...
-            _ui = new ConsoleUI();
-
-            _garage = new Garage<Vehicle>(AskForGarageSize());
-            _ui.PrintLine("");
-            _handler = new Handler(_garage);
-
-            if (AskForSeedingData() == true)
+            if (uiType == "console")
             {
-                SeedData(Garage);
+                _ui = new ConsoleUI();
+
+                _garage = new Garage<Vehicle>(AskForGarageSize());
+                _ui.PrintLine("");
+                _handler = new Handler(_garage);
+
+                if (AskForSeedingData() == true)
+                    SeedData(_garage);
+            }
+            else
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -45,17 +44,17 @@ namespace dotnet_exercise_csharp_5_garage_1
                 PrintPageHeader();
 
                 // Print menu
-                UI.PrintLine("       Huvudmeny");
-                UI.PrintLine("-------------------------");
-                UI.PrintLine("1 Incheckning");
-                UI.PrintLine("2 Utcheckning");
-                UI.PrintLine("3 Sök på reg.nummer");
-                UI.PrintLine("4 Sök med filter");
-                UI.PrintLine("5 Lista alla fordon");
-                UI.PrintLine("6 Lista fordon efter typ");
-                UI.PrintLine("0 Avsluta");
-                UI.PrintLine("");
-                menuChoice = UI.AskForUInt("Välj aktiviet (0 - 6)", 0, 6);
+                _ui.PrintLine("       Huvudmeny");
+                _ui.PrintLine("-------------------------");
+                _ui.PrintLine("1 Incheckning");
+                _ui.PrintLine("2 Utcheckning");
+                _ui.PrintLine("3 Sök på reg.nummer");
+                _ui.PrintLine("4 Sök med filter");
+                _ui.PrintLine("5 Lista alla fordon");
+                _ui.PrintLine("6 Lista fordon efter typ");
+                _ui.PrintLine("0 Avsluta");
+                _ui.PrintLine("");
+                menuChoice = _ui.AskForUInt("Välj aktiviet (0 - 6)", 0, 6);
 
                 switch (menuChoice)
                 {
@@ -79,10 +78,10 @@ namespace dotnet_exercise_csharp_5_garage_1
                         break;
                     case 0:
                         exit = true;
-                        UI.PrintLine($"{Environment.NewLine}Programmet avslutas...");
+                        _ui.PrintLine($"{Environment.NewLine}Programmet avslutas...");
                         break;
                 }
-                UI.ExitMessageAction("Tryck på valfri tangent för att forsätta!");
+                _ui.ExitMessageAction("Tryck på valfri tangent för att forsätta!");
             } while (!exit);
 
         }
@@ -93,7 +92,7 @@ namespace dotnet_exercise_csharp_5_garage_1
             PrintPageHeader();
             PrintSubHeader("Registrera fordon");
 
-            if (!Handler.IsFull)
+            if (!_handler.IsFull)
             {
                 uint menuChoice = AskCreateVehicleType(0, 5);
 
@@ -127,86 +126,86 @@ namespace dotnet_exercise_csharp_5_garage_1
                     }
                 }
                 else
-                    UI.PrintLine($"{Environment.NewLine}Avbryter...");
+                    _ui.PrintLine($"{Environment.NewLine}Avbryter...");
             }
             else
-                UI.PrintLine("Garaget är tyvärr fullt - kan inte parkera flera fordon!");
+                _ui.PrintLine("Garaget är tyvärr fullt - kan inte parkera flera fordon!");
         }
 
 
         private void ParkCar(string regNbr, string color, uint nbrWheels)
         {
             string message;
-            string fuleType = UI.AskForString("Drivmedel");
-            uint cylinderVolume = UI.AskForUInt("Cylindervolym");
+            string fuleType = _ui.AskForString("Drivmedel");
+            uint cylinderVolume = _ui.AskForUInt("Cylindervolym");
 
             if (_handler.ParkCar(regNbr, color, nbrWheels, fuleType, cylinderVolume))
                 message = "Bilen är nu parkerad";
             else
                 message = "Kunde inte parkera bilen - okänt fel!";
-            UI.PrintLine($"{Environment.NewLine}{message}");
+            _ui.PrintLine($"{Environment.NewLine}{message}");
         }
 
         private void ParkBus(string regNbr, string color, uint nbrWheels)
         {
             string message;
-            uint length = UI.AskForUInt("Längd");
-            uint cylinderVolume = UI.AskForUInt("Antal säten");
+            uint length = _ui.AskForUInt("Längd");
+            uint cylinderVolume = _ui.AskForUInt("Antal säten");
 
-            if (Handler.ParkBoat(regNbr, color, nbrWheels, length, cylinderVolume))
+            if (_handler.ParkBoat(regNbr, color, nbrWheels, length, cylinderVolume))
                 message = "Bussen är nu parkerad";
             else
                 message = "Kunde inte parkera bussen - okänt fel!";
-            UI.PrintLine($"{Environment.NewLine}{message}");
+            _ui.PrintLine($"{Environment.NewLine}{message}");
         }
 
         private void ParkBoat(string regNbr, string color, uint nbrWheels)
         {
             string message;
-            uint lenghtInFoot = UI.AskForUInt("Längd i fot");
-            uint numberOfEngines = UI.AskForUInt("Antal motorer", 0);
+            uint lenghtInFoot = _ui.AskForUInt("Längd i fot");
+            uint numberOfEngines = _ui.AskForUInt("Antal motorer", 0);
 
-            if (Handler.ParkBus(regNbr, color, nbrWheels, lenghtInFoot, numberOfEngines))
+            if (_handler.ParkBus(regNbr, color, nbrWheels, lenghtInFoot, numberOfEngines))
                 message = "Båten är nu parkerad";
             else
                 message = "Kunde inte parkera båten - okänt fel!";
-            UI.PrintLine($"{Environment.NewLine}{message}");
+            _ui.PrintLine($"{Environment.NewLine}{message}");
         }
 
         private void ParkAirplane(string regNbr, string color, uint nbrWheels)
         {
             string message;
-            uint nbrSeats = UI.AskForUInt("Antal säten");
-            uint nbrEngines = UI.AskForUInt("Antal motorer", 0);
+            uint nbrSeats = _ui.AskForUInt("Antal säten");
+            uint nbrEngines = _ui.AskForUInt("Antal motorer", 0);
 
-            if (Handler.ParkAirplane(regNbr, color, nbrWheels, nbrSeats, nbrEngines))
+            if (_handler.ParkAirplane(regNbr, color, nbrWheels, nbrSeats, nbrEngines))
                 message = "Flygplanet är nu parkerat";
             else
                 message = "Kunde inte parkera flygplanet - okänt fel!";
-            UI.PrintLine($"{Environment.NewLine}{message}");
+            _ui.PrintLine($"{Environment.NewLine}{message}");
         }
 
         private void ParkMotorcycle(string regNbr, string color, uint nbrWheels)
         {
             string message;
-            uint nbrSeats = UI.AskForUInt("Antal säten");
-            uint cylinderVolume = UI.AskForUInt("Cylindervolym");
+            uint nbrSeats = _ui.AskForUInt("Antal säten");
+            uint cylinderVolume = _ui.AskForUInt("Cylindervolym");
 
-            if (Handler.ParkMotorcycle(regNbr, color, nbrWheels, nbrSeats, cylinderVolume))
+            if (_handler.ParkMotorcycle(regNbr, color, nbrWheels, nbrSeats, cylinderVolume))
                 message = "Motorcykeln är nu parkerad";
             else
                 message = "Kunde inte parkera motorcykeln - okänt fel!";
-            UI.PrintLine($"{Environment.NewLine}{message}");
+            _ui.PrintLine($"{Environment.NewLine}{message}");
         }
 
 
         private (string regNbr, string color, uint wheels) AskBaseVehicleData()
         {
-            UI.PrintLine($"{Environment.NewLine}Ange fordonsuppgifer:{Environment.NewLine}");
+            _ui.PrintLine($"{Environment.NewLine}Ange fordonsuppgifer:{Environment.NewLine}");
 
-            string regNbr = UI.AskForString("Reg.nummer");
-            string color = UI.AskForString("Färg");
-            uint wheels = UI.AskForUInt("Antal hjul", 0);
+            string regNbr = _ui.AskForString("Reg.nummer");
+            string color = _ui.AskForString("Färg");
+            uint wheels = _ui.AskForUInt("Antal hjul", 0);
 
             return (regNbr, color, wheels);
         }
@@ -221,12 +220,12 @@ namespace dotnet_exercise_csharp_5_garage_1
 
             if (_garage.Count > 0)
             {
-                string regNbr = UI.AskForString("Ange reg.nummer");
+                string regNbr = _ui.AskForString("Ange reg.nummer");
 
                 Vehicle? vehicle = _handler.SearchByRegNbr(regNbr);
                 if (vehicle != null)
                 {
-                    if (Handler.UnparkVehicle(vehicle))
+                    if (_handler.UnparkVehicle(vehicle))
                         message = $"Fordonet '{vehicle.RegNbr}' är nu utcheckat";
                     else
                         message = "Fel - kunde inte checka ut fordonet!?";
@@ -237,7 +236,7 @@ namespace dotnet_exercise_csharp_5_garage_1
             else
                 message = "Garaget är tomt!";
 
-            UI.PrintLine($"{Environment.NewLine}{message}");
+            _ui.PrintLine($"{Environment.NewLine}{message}");
         }
 
         private void SearchVehicleByRegNbr()
@@ -245,17 +244,17 @@ namespace dotnet_exercise_csharp_5_garage_1
             PrintPageHeader();
             PrintSubHeader("Sök på reg.nummer");
 
-            string regNbr = UI.AskForString("Ange fordonets reg.nummer");
+            string regNbr = _ui.AskForString("Ange fordonets reg.nummer");
 
             // Search parked vehicle by reg.nbr and show details
-            Vehicle? vehicle = Handler.SearchByRegNbr(regNbr);
+            Vehicle? vehicle = _handler.SearchByRegNbr(regNbr);
             if (vehicle != null)
             {
-                UI.PrintLine($"{Environment.NewLine}Fordonsuppgifter:{Environment.NewLine}");
-                UI.PrintLine(vehicle.ToString());
+                _ui.PrintLine($"{Environment.NewLine}Fordonsuppgifter:{Environment.NewLine}");
+                _ui.PrintLine(vehicle.ToString());
             }
             else
-                UI.PrintLine($"{Environment.NewLine}Hittade inget fordon med reg.nummer: {regNbr}");
+                _ui.PrintLine($"{Environment.NewLine}Hittade inget fordon med reg.nummer: {regNbr}");
 
         }
 
@@ -263,12 +262,12 @@ namespace dotnet_exercise_csharp_5_garage_1
         {
             PrintPageHeader();
             PrintSubHeader("Sök fordon med filter");
-            UI.PrintLine($"Tom rad om ingen sökkriterie{Environment.NewLine}");
+            _ui.PrintLine($"Tom rad om ingen sökkriterie{Environment.NewLine}");
 
             // Ask for search criteria
-            string? vehicleType = UI.AskForString("Fordonstyp", null, true).Trim();
-            string? color = UI.AskForString("Färg", null, true).Trim();
-            string wheels = UI.AskForString("Antal hjul", null, true);
+            string? vehicleType = _ui.AskForString("Fordonstyp", null, true).Trim();
+            string? color = _ui.AskForString("Färg", null, true).Trim();
+            string wheels = _ui.AskForString("Antal hjul", null, true);
 
             // convert vehicle type to english
             string type = "";
@@ -297,8 +296,8 @@ namespace dotnet_exercise_csharp_5_garage_1
             List<Vehicle> result = _handler.SearchWithFilter(type, color, nbrWheels);
 
             // Print search results
-            UI.PrintLine($"{Environment.NewLine}Söker fordon med filter:");
-            UI.PrintLine($"-----------------------{Environment.NewLine}");
+            _ui.PrintLine($"{Environment.NewLine}Söker fordon med filter:");
+            _ui.PrintLine($"-----------------------{Environment.NewLine}");
             if (result.Count > 0)
             {
                 foreach (var item in result)
@@ -307,13 +306,13 @@ namespace dotnet_exercise_csharp_5_garage_1
                 }
             }
             else
-                UI.PrintLine("Hittade inget fordon!");
+                _ui.PrintLine("Hittade inget fordon!");
         }
 
 
         private string CreateOccupancyText()
         {
-            return $"{Handler.Capacity - Handler.Count} av {Handler.Capacity} platser lediga";
+            return $"{_handler.Capacity - _handler.Count} av {_handler.Capacity} platser lediga";
         }
         private void PrintParkedVehicles()
         {
@@ -323,7 +322,7 @@ namespace dotnet_exercise_csharp_5_garage_1
             // List parked vehicles
             foreach (var item in _garage)
             {
-                UI.PrintLine(item.ToString());
+                _ui.PrintLine(item.ToString());
             }
         }
         private void PrintVehicleByType()
@@ -331,31 +330,31 @@ namespace dotnet_exercise_csharp_5_garage_1
             PrintPageHeader();
             PrintSubHeader($"Parkerade fordon utifrån typ ({CreateOccupancyText()})");
 
-            Dictionary<string, uint> listTypes = Handler.GetVehicleByType();
+            Dictionary<string, uint> listTypes = _handler.GetVehicleByType();
             if (listTypes.Count > 0)
             {
                 foreach (var vehicle in listTypes)
                 {
-                    UI.PrintLine($"{vehicle.Key}: {vehicle.Value} st");
+                    _ui.PrintLine($"{vehicle.Key}: {vehicle.Value} st");
                 }
             }
             else
             {
-                UI.PrintLine("Parkerade fordon saknas!");
+                _ui.PrintLine("Parkerade fordon saknas!");
             }
 
         }
         private void PrintPageHeader()
         {
-            UI.Clear();
+            _ui.Clear();
             // Print Header
-            //UI.PrintLine($"Välkommen till Garage 1.0          {_handler.Capacity - _handler.Count} av {_handler.Capacity} platser lediga");
-            UI.PrintLine($"Välkommen till Garage 1.0          {CreateOccupancyText()}");
-            UI.PrintLine($"========================================================={Environment.NewLine}");
+            //_ui.PrintLine($"Välkommen till Garage 1.0          {_handler.Capacity - _handler.Count} av {_handler.Capacity} platser lediga");
+            _ui.PrintLine($"Välkommen till Garage 1.0          {CreateOccupancyText()}");
+            _ui.PrintLine($"========================================================={Environment.NewLine}");
         }
         private void PrintSubHeader(string header)
         {
-            UI.PrintLine($"_______ {header} _______{Environment.NewLine}");
+            _ui.PrintLine($"_______ {header} _______{Environment.NewLine}");
         }
 
 
@@ -363,28 +362,28 @@ namespace dotnet_exercise_csharp_5_garage_1
 
         private uint AskCreateVehicleType(uint min, uint max)
         {
-            UI.PrintLine($"Ange fordonstyp:{Environment.NewLine}");
-            UI.PrintLine("1 Bil");
-            UI.PrintLine("2 Buss");
-            UI.PrintLine("3 Båt");
-            UI.PrintLine("4 Flygplan");
-            UI.PrintLine("5 Motorcykel");
-            UI.PrintLine($"0 Avbryt{Environment.NewLine}");
+            _ui.PrintLine($"Ange fordonstyp:{Environment.NewLine}");
+            _ui.PrintLine("1 Bil");
+            _ui.PrintLine("2 Buss");
+            _ui.PrintLine("3 Båt");
+            _ui.PrintLine("4 Flygplan");
+            _ui.PrintLine("5 Motorcykel");
+            _ui.PrintLine($"0 Avbryt{Environment.NewLine}");
 
-            return UI.AskForUInt($"Välj aktiviet ({min} - {max})", min, max);
+            return _ui.AskForUInt($"Välj aktiviet ({min} - {max})", min, max);
         }
 
         private uint AskForGarageSize()
         {
-            UI.PrintLine($"Välkommen till Garage 1.0");
-            UI.PrintLine($"========================={Environment.NewLine}");
+            _ui.PrintLine($"Välkommen till Garage 1.0");
+            _ui.PrintLine($"========================={Environment.NewLine}");
 
-            return UI.AskForUInt($"Ange antal platser i garaget", 1);
+            return _ui.AskForUInt($"Ange antal platser i garaget", 1);
         }
 
         private bool AskForSeedingData()
         {
-            string str = UI.AskForString("Fyll garaget med upp till 6 fordon (j/n)", (input) =>
+            string str = _ui.AskForString("Fyll garaget med upp till 6 fordon (j/n)", (input) =>
             {
                 if (!String.IsNullOrEmpty(input) && input.Length == 1 && (input.ToUpper() == "J" || input.ToUpper() == "N"))
                 {

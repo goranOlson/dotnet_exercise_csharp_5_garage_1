@@ -1,6 +1,6 @@
 ﻿namespace dotnet_exercise_csharp_5_garage_1.Classes
 {
-    internal abstract class Vehicle
+    public abstract class Vehicle
     {
         public string Color { get; }
         public string RegNbr { get; }
