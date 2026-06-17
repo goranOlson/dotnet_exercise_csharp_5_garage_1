@@ -130,5 +130,25 @@ namespace dotnet_exercise_csharp_5_garage_1.Test
             // Assert
             Assert.True(result);
         }
+
+        [Fact]
+        public void Garage_yield_ShouldBeTrue()
+        {
+            // Arrange
+            Garage<Vehicle> garage = new Garage<Vehicle>(2);
+            garage.AddVehicle(new Car("AAA123", "Vit", 4, "Bensin", 1600));
+            garage.AddVehicle(new Car("BBB123", "Svart", 4, "Bensin", 1600));
+
+            // Act
+            Garage<Vehicle> newGarage = new Garage<Vehicle>(2);
+            foreach (var item in garage)
+            {
+                newGarage.AddVehicle(item);
+            }
+            bool equal = garage.SequenceEqual(newGarage);
+
+            // Assert
+            Assert.True(equal);
+        }
     }
 }
