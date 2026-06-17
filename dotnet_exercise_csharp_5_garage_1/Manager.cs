@@ -47,7 +47,7 @@ namespace dotnet_exercise_csharp_5_garage_1
                 switch (menuChoice)
                 {
                     case 1:
-                        CheckinVehicle(); 
+                        CheckInVehicle(); 
                         break;
                     case 2:
                         CheckOutVehicle();
@@ -56,7 +56,7 @@ namespace dotnet_exercise_csharp_5_garage_1
                         SearchVehicleByRegNbr();
                         break;
                     case 4:
-                        SearchSpecial();
+                        SearchVehicleByProperty();
                         break;
                     case 5:
                         PrintParkedVehicles();
@@ -73,7 +73,7 @@ namespace dotnet_exercise_csharp_5_garage_1
             } while (!exit);
         }
        
-        private void CheckinVehicle()
+        private void CheckInVehicle()
         {
             PrintPageHeader();
             PrintSubHeader("Registrera fordon");
@@ -93,19 +93,19 @@ namespace dotnet_exercise_csharp_5_garage_1
                     switch (menuChoice)
                     {
                         case 1:
-                            ParkCar(commonData.regNbr, commonData.color, commonData.wheels);
+                            CheckInCar(commonData.regNbr, commonData.color, commonData.wheels);
                             break;
                         case 2:
-                            ParkBus(commonData.regNbr, commonData.color, commonData.wheels);
+                            CheckInBus(commonData.regNbr, commonData.color, commonData.wheels);
                             break;
                         case 3:
-                            ParkBoat(commonData.regNbr, commonData.color, commonData.wheels);
+                            CheckInBoat(commonData.regNbr, commonData.color, commonData.wheels);
                             break;
                         case 4:
-                            ParkAirplane(commonData.regNbr, commonData.color, commonData.wheels);
+                            CheckInAirplane(commonData.regNbr, commonData.color, commonData.wheels);
                             break;
                         case 5:
-                            ParkMotorcycle(commonData.regNbr, commonData.color, commonData.wheels);
+                            CheckInMotorcycle(commonData.regNbr, commonData.color, commonData.wheels);
                             break;
                         default:
                             break;
@@ -118,7 +118,7 @@ namespace dotnet_exercise_csharp_5_garage_1
                 _ui.PrintLine("Garaget är tyvärr fullt - kan inte parkera flera fordon!");
         }
 
-        private void ParkCar(string regNbr, string color, uint nbrWheels)
+        private void CheckInCar(string regNbr, string color, uint nbrWheels)
         {
             string message;
             string fuleType = _ui.AskForString("Drivmedel");
@@ -131,7 +131,7 @@ namespace dotnet_exercise_csharp_5_garage_1
             _ui.PrintLine($"{Environment.NewLine}{message}");
         }
 
-        private void ParkBus(string regNbr, string color, uint nbrWheels)
+        private void CheckInBus(string regNbr, string color, uint nbrWheels)
         {
             string message;
             uint length = _ui.AskForUInt("Längd");
@@ -144,7 +144,7 @@ namespace dotnet_exercise_csharp_5_garage_1
             _ui.PrintLine($"{Environment.NewLine}{message}");
         }
 
-        private void ParkBoat(string regNbr, string color, uint nbrWheels)
+        private void CheckInBoat(string regNbr, string color, uint nbrWheels)
         {
             string message;
             uint lenghtInFoot = _ui.AskForUInt("Längd i fot");
@@ -157,7 +157,7 @@ namespace dotnet_exercise_csharp_5_garage_1
             _ui.PrintLine($"{Environment.NewLine}{message}");
         }
 
-        private void ParkAirplane(string regNbr, string color, uint nbrWheels)
+        private void CheckInAirplane(string regNbr, string color, uint nbrWheels)
         {
             string message;
             uint nbrSeats = _ui.AskForUInt("Antal säten");
@@ -170,7 +170,7 @@ namespace dotnet_exercise_csharp_5_garage_1
             _ui.PrintLine($"{Environment.NewLine}{message}");
         }
 
-        private void ParkMotorcycle(string regNbr, string color, uint nbrWheels)
+        private void CheckInMotorcycle(string regNbr, string color, uint nbrWheels)
         {
             string message;
             uint nbrSeats = _ui.AskForUInt("Antal säten");
@@ -244,7 +244,7 @@ namespace dotnet_exercise_csharp_5_garage_1
                 _ui.PrintLine(messageGarageEmpty);
         }
 
-        private void SearchSpecial()
+        private void SearchVehicleByProperty()
         {
             PrintPageHeader();
             PrintSubHeader("Sök fordon med filter");
