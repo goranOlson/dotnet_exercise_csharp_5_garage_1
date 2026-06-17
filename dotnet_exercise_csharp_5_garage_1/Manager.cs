@@ -187,7 +187,18 @@ namespace dotnet_exercise_csharp_5_garage_1
         {
             _ui.PrintLine($"{Environment.NewLine}Ange fordonsuppgifer:{Environment.NewLine}");
 
-            string regNbr = _ui.AskForString("Reg.nummer");
+            bool regNbrIsUnique = false;
+            string regNbr;
+
+            do {
+                // Reg.number must be unique
+                regNbr = _ui.AskForString("Reg.nummer");
+                if (_handler.SearchByRegNbr(regNbr) == null)
+                    regNbrIsUnique = true;
+                else
+                    _ui.PrintLine($"Fordonet är redan parkerat - testa ett annat reg.nummer!{Environment.NewLine}");
+            } while (!regNbrIsUnique);
+
             string color = _ui.AskForString("Färg");
             uint wheels = _ui.AskForUInt("Antal hjul", 0);
 
